@@ -1,19 +1,22 @@
 'use strict'
 
 const ProductModel = require('../models/Products')
+const Validation = require('../libs/inputValidator')
 let service = {}
 
-service.create = async ({ criteria }) => {
+service.create = async ({ code, name, stock, description }) => {
     try {
-        const data = await ProductModel.create({
-            _id: null,
-            kodeProduct: 'P-001',
-            userId: 'U-001',
-            namaProduct: 'Produk 1',
-            stok: 10,
-            keterangan: 'Ini keterangan produk 1',
-            createAt: new Date(),
-            updateAt: new Date()
+        let data = Validation.required({code, name, stock})
+        data = Validation.toString({code, name, description})
+        data = {...data, ...Validation.toNumber({ stock })}
+        const data = await ProductModel.updateOne({ code }, {
+            $setOnInsert: {
+                ...data,
+                createdAt: new Date()
+            },
+            $set: {
+                updatedAt: new Date()
+            }
         })
         return data
     } catch (err) {

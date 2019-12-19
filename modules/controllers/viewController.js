@@ -1,5 +1,7 @@
 'use strict'
 
+const ProductServices = require('../services/ProductService')
+
 let controller = {}
 
 controller.login = (req, res) => {
@@ -14,8 +16,9 @@ controller.register = (req, res) => {
 controller.forgot= (req, res) => {
     res.render('forgot', {activeMenu: ''})
 }
-controller.products = (req, res) => {
-    res.render('products', {activeMenu: 'products', title: "Produk"})
+controller.products = async (req, res) => {
+    const data = await ProductServices.getProducts(req.body)
+    res.render('products', { activeMenu: 'products', title: 'Produk', data })
 }
 controller.transactions = (req, res) => {
     res.render('transactions', {activeMenu: 'transactions', title: "Transaksi"})
