@@ -17,7 +17,7 @@ controller.forgot= (req, res) => {
     res.render('forgot', {activeMenu: ''})
 }
 controller.products = async (req, res) => {
-    const data = await ProductServices.getProducts(req.body)
+    const data = await ProductServices.list(req.body)
     res.render('products', { activeMenu: 'products', title: 'Produk', data })
 }
 controller.transactions = (req, res) => {

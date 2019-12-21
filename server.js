@@ -1,8 +1,11 @@
+'use strict'
+
+require('dotenv').config()
 const {join} = require('path')
-const mongodbConnection = require('./modules/libs/mongodb')
+const mongodbConnection = require('./app/libs/mongodb')
 const express = require('express')
-const backendRoutes = require('./modules/routes/backendRoutes')
-const frontendRoutes = require('./modules/routes/frontendRoutes')
+const backendRoutes = require('./app/routes/backendRoutes')
+const frontendRoutes = require('./app/routes/frontendRoutes')
 const app = express()
 const port = 3000
 
@@ -12,7 +15,7 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.set('view engine', 'pug')
-app.set('views', join(__dirname, 'modules/views'))
+app.set('views', join(__dirname, 'app/views'))
 
 app.use((req, res, next) => {
     console.log('- accessing ', req.originalUrl)
@@ -32,7 +35,7 @@ app.all('*', (req, res) => {
 })
 
 mongodbConnection()
-    .then(function () {
+    .then(() => {
         app.listen(port, console.log(`app listen on ${port}`))
     })
     .catch((err) => {

@@ -9,7 +9,7 @@ service.create = async ({ code, name, stock, description }) => {
         let data = Validation.required({code, name, stock})
         data = Validation.toString({code, name, description})
         data = {...data, ...Validation.toNumber({ stock })}
-        const data = await ProductModel.updateOne({ code }, {
+        data = await ProductModel.updateOne({ code }, {
             $setOnInsert: {
                 ...data,
                 createdAt: new Date()

@@ -11,6 +11,11 @@ router.get('/', (req, res) => {
         version: '0.1.0'
     })
 })
+
+// login route
+router.post('/user/login', UserController.login)
+
+// product routes
 router.get('/products', ProductController.getProduct)
 router.get('/products/create', ProductController.create)
 

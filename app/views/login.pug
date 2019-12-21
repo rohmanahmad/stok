@@ -24,28 +24,30 @@ html(lang="en")
                             div(class="input-group")
                                 div(class="input-group-addon")
                                     i(class="material-icons md-dark pmd-sm") perm_identity
-                                input(type="text", class="form-control", id="exampleInputAmount")
+                                input(type="text", class="form-control", autocomplete="off", id="input-username")
                         
                         div(class="form-group pmd-textfield pmd-textfield-floating-label")
                             label(for="inputError1", class="control-label pmd-input-group-label") Password
                             div(class="input-group")
                                 div(class="input-group-addon")
                                     i(class="material-icons md-dark pmd-sm") lock_outline
-                                input(type="text", class="form-control", id="exampleInputAmount")
+                                input(type="text", class="form-control", autocomplete="off", id="input-password")
                     
                     div(class="pmd-card-footer card-footer-no-border card-footer-p16 text-center")
                         div(class="form-group clearfix")
                             div(class="checkbox pull-left")
-                                label(class="pmd-checkbox checkbox-pmd-ripple-effect")
-                                    input(type="checkbox", checked="", value="", class="pmd-checkbox")
-                                    | Remember me
+                                //- label(class="pmd-checkbox checkbox-pmd-ripple-effect")
+                                //-     input(type="checkbox", checked="", value="", class="pmd-checkbox")
+                                //-     | Remember me
                             
                             div(class="pull-right forgot-password")
-                                a(href="javascript:void(0);") Forgot password?
+                                //- a(href="javascript:void(0);") Forgot password?
                         
-                        button(type="submit", class="btn pmd-ripple-effect btn-primary btn-block", onclick="window.location='/transactions'") Login
+                        button(type="submit", class="btn pmd-ripple-effect btn-primary btn-block", onclick="fn.doLogin();") Login
                         
         //- end content
         script(src="/vendor/jquery/jquery-1.12.2.min.js")
         script(src="/vendor/bootstrap/js/bootstrap.min.js")
         script(src="/vendor/propeller/js/propeller.min.js")
+        script(src="/assets/modules/utils.js")
+        script(src="/assets/modules/login.js")
