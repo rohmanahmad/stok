@@ -31,16 +31,27 @@ service.login = async ({ username, password }) => {
 service.getUsers = async ({ username, password }) => {
     try {
         const id = await service.getNewUserID()
-        console.log(parseInt(id.replace('U-', '')))
+        console.log()
     } catch (err) {
         throw err
     }
 }
 service.getNewUserID = async () => {
     try {
+        const pattern = 'U-000'
         const { userId } = await UserModel.findOne({}).sort({$natural: -1})
-        console.log(userId)
-        return userId
+        const lastId = `${parseInt(userId.replace('U-', '')) + 1}`
+        const lenChar = lastId.length
+        const newId = pattern.substring(0, pattern.length - lenChar) + lastId
+        return newId
+    } catch (err) {
+        throw err
+    }
+}
+service.checkExists = function (username) {
+    try {
+        const exists = await UserModel.findOne({username})
+        if (exists) throw new Error(`${username} already exists!`)
     } catch (err) {
         throw err
     }
@@ -49,6 +60,7 @@ service.create = async ({ username, password, confirm, email, roleType }) => {
     try {
         if (password !== confirm) throw new Error('Password Doesnt Match')
         roleType = roleType === 'admin' ? 'admin' : 'user'
+        await this.checkExists(username)
         const data = await UserModel.updateOne({username}, {
             $setOnInsert: {
                 _id: null,

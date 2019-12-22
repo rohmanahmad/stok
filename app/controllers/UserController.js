@@ -20,6 +20,7 @@ controller.getUsers = async (req, res, next) => {
         const data = await userService.getUsers(req.query)
         res.send(data)
     } catch (err) {
+        console.log(err)
         errorMessage({req, res, err})
     }
 }
