@@ -21,17 +21,32 @@ service.login = async ({ username, password }) => {
         const { roleType } = data
         const newExp = new Date().getTime() + exp
         const stringData = JSON.stringify({ username, roleType, exp: newExp })
-        const token = md5(stringData)
-        set({ token, value: data, exp }) // 12 jam
-        return { token, username, roleType, exp: newExp }
+        const key = md5(stringData)
+        set({ key, value: stringData, exp }) // 12 jam
+        return { token: key, username, roleType, exp: newExp }
     } catch (err) {
         throw err
     }
 }
-service.getUsers = async ({ username, password }) => {
+service.getUsers = async ({ username, email, status, page, limit }, myusername) => {
     try {
-        const id = await service.getNewUserID()
-        console.log()
+        let criteria = {}
+        criteria['username'] = {
+            '$ne': myusername
+        }
+        if (username) criteria['username']['$eq'] = new RegExp(username)
+        if (email) criteria['email'] = email
+        if (status) criteria['status'] = parseInt(status)
+        limit = (limit && parseInt(limit) > 0) ? parseInt(limit) : 10
+        page = (page && parseInt(page)) ? parseInt(page) : 1
+        const skip = (page - 1) * limit
+        const data = await UserModel.find(criteria).skip(skip).limit(limit)
+        let row = []
+        for (const r of data) {
+            const {email: e, username: u, roleType, status: s, userId, createdAt, updateAt} = r
+            row.push({email: e, username: u, roleType, status: s, userId, createdAt, updateAt})
+        }
+        return row
     } catch (err) {
         throw err
     }
@@ -48,7 +63,7 @@ service.getNewUserID = async () => {
         throw err
     }
 }
-service.checkExists = function (username) {
+service.checkExists = async (username) => {
     try {
         const exists = await UserModel.findOne({username})
         if (exists) throw new Error(`${username} already exists!`)

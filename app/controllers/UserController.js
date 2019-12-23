@@ -1,5 +1,7 @@
 const userService = require('../services/userService')
 const errorHandler = require('../libs/errorHandler')
+const { getAccess } = require('../helpers/access')
+
 const errorMessage = function (obj = {}) {
     errorHandler({...obj, controller: 'User'})
 }
@@ -17,8 +19,10 @@ controller.login = async (req, res, next) => {
 }
 controller.getUsers = async (req, res, next) => {
     try {
-        const data = await userService.getUsers(req.query)
-        res.send(data)
+        console.log(req.roleAccess)
+        const access = getAccess(req.roleAccess, 'users')
+        const items = await userService.getUsers(req.query)
+        res.send({ access, items })
     } catch (err) {
         console.log(err)
         errorMessage({req, res, err})

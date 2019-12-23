@@ -12,6 +12,8 @@ utils.sendXHR = function (opt) {
             resolve(res);
         }
         opt.error = function (err) {
+            debugger
+            if (err.status === 402) window.location.href = '/logout';
             reject(err);
         }
         $.ajax(opt);

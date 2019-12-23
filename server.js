@@ -4,11 +4,13 @@ require('dotenv').config()
 const {join} = require('path')
 const mongodbConnection = require('./app/libs/mongodb')
 const express = require('express')
+const cookieParser = require('cookie-parser')
 const backendRoutes = require('./app/routes/backendRoutes')
 const frontendRoutes = require('./app/routes/frontendRoutes')
 const app = express()
-const port = 3000
+const port = process.env.PORT
 
+app.use(cookieParser()) // using cookie parser
 app.use(express.static('public', {}))
 
 app.use(express.json()) // for parsing application/json

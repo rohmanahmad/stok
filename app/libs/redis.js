@@ -20,6 +20,11 @@ module.exports = {
         client.set(key, value, 'EX', exp)
     },
     get: (key) => {
-        client.get(key)
+        return new Promise((resolve, reject) => {
+            client.get(key, (err, data) => {
+                if (err) return reject(err)
+                resolve(data)
+            })
+        })
     }
 }

@@ -3,8 +3,13 @@
 const express = require('express')
 const router = express.Router()
 
+// controllers
 const ProductController = require('../controllers/ProductController')
 const UserController = require('../controllers/UserController')
+
+// middlewares
+const TokenAuth = require('../middlewares/TokenAuthMiddleware')
+const { ApiAccess } = require('../middlewares/AccessMiddleware')
 
 router.get('/', (req, res) => {
     res.send({
@@ -13,14 +18,14 @@ router.get('/', (req, res) => {
 })
 
 // login route
-router.post('/user/login', UserController.login)
+router.post('/user/login', [UserController.login])
 
 // product routes
-router.get('/products', ProductController.getProduct)
-router.get('/products/create', ProductController.create)
+router.get('/products', [TokenAuth, ApiAccess, ProductController.getProduct])
+router.get('/products/create', [TokenAuth, ApiAccess, ProductController.create])
 
 // users routes
-router.get('/users', UserController.getUsers)
-router.get('/users/create', UserController.create)
+router.get('/users', [TokenAuth, ApiAccess, UserController.getUsers])
+router.get('/users/create', [TokenAuth, ApiAccess, UserController.create])
 
 module.exports = router

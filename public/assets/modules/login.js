@@ -5,7 +5,9 @@ fn.selectors = {
     password: '#input-password'
 }
 
-fn.init = function () {}
+fn.init = function () {
+    ls.clear();
+}
 
 fn.doLogin = function () {
     const data = fn.getInputValue({
@@ -18,12 +20,18 @@ fn.doLogin = function () {
         data
     })
         .then(function (res) {
+            let currentToken = '';
             for (let key in res) {
                 ls.setItem(key, res[key]);
+                if (key === 'token') currentToken = res[key];
             }
+            document.cookie = 'x_stok_key=' + currentToken;
             window.location.href = '/users';
         })
         .catch(function (err) {
             alert(err.message);
         });
 }
+
+// call init first
+fn.init();
