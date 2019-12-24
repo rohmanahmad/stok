@@ -8,6 +8,7 @@ module.exports = async (req, res, next) => {
         if (!xheader || (xheader && xheader.length === 0)) throw new Error('Invalid Auth Header')
         let user = await get(xheader)
         if (!user || (user && user.length === 0)) throw new Error('Invalid Session Data')
+        user = JSON.parse(user)
         req.config = { user }
         next()
     } catch (err) {
