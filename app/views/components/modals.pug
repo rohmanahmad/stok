@@ -1,5 +1,5 @@
 //- Users
-div(tabindex="-1" class="modal fade" id="form-user" style="display: none;" aria-hidden="true")
+div(tabindex="-1" class="modal fade" id="modal-form-user" style="display: none;" aria-hidden="true")
 	div(class="modal-dialog")
 		div(class="modal-content")
 			div(class="modal-header")
@@ -34,8 +34,8 @@ div(tabindex="-1" class="modal fade" id="form-user" style="display: none;" aria-
 						textarea(required class="form-control", id="description")
 					
 			div(class="pmd-modal-action pmd-modal-bordered text-right")
-				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-primary" type="button") Save changes
-				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button") Discard
+				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-danger" style="float: left;" type="button") Batalkan
+				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-primary" type="button") Simpan
 
 //- Transactions
 div(tabindex="-1" class="modal fade" id="form-transaction" style="display: none;" aria-hidden="true")
@@ -48,33 +48,33 @@ div(tabindex="-1" class="modal fade" id="form-transaction" style="display: none;
 				form(class="form-horizontal")
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(for="first-name") Type
-						select(class="mat-input form-control" id="role")
+						select(class="mat-input form-control" id="trx_type")
 							option(value="user") Trx Keluar
 							option(value="admin") Trx Masuk
 					
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(for="first-name") Tanggal
-						input(type="date" class="mat-input form-control" id="date" value="")
+						input(type="date" class="mat-input form-control" id="trx_date" value="")
 						//- span(class="help-text") required! 
 
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(for="first-name") Produk
-						select(class="mat-input form-control pmd-select2" id="product")
+						select(class="mat-input form-control pmd-select2" id="trx_product")
 							option(value="Prd 1") Product 1
 							option(value="Prd 2") Product 2
 							option(value="Prd 3") Product 3
 					
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(for="first-name") Qty
-						input(type="number" class="mat-input form-control" id="qty" value="")
+						input(type="number" class="mat-input form-control" id="trx_qty" value="")
 					
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(class="control-label") Keterangan
-						textarea(required class="form-control", id="description")
+						textarea(required class="form-control", id="trx_description")
 					
 			div(class="pmd-modal-action pmd-modal-bordered text-right")
-				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-primary" type="button") Save changes
-				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button") Discard
+				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-danger" style="float: left;" type="button") Batalkan
+				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-primary" type="button") Simpan
 
 //- Products
 div(tabindex="-1" class="modal fade" id="form-product" style="display: none;" aria-hidden="true") 
@@ -87,20 +87,20 @@ div(tabindex="-1" class="modal fade" id="form-product" style="display: none;" ar
 				form(class="form-horizontal")
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(for="first-name") Kode Produk
-						input(type="text" class="mat-input form-control" id="prdID" value="")
+						input(type="text" class="mat-input form-control" id="prd_id" value="")
 						//- span(class="help-text") required! 
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(for="first-name") Nama Produk
-						input(type="text" class="mat-input form-control" id="prdName" value="")
+						input(type="text" class="mat-input form-control" id="prd_name" value="")
 					
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(for="first-name") Stok
-						input(type="number" class="mat-input form-control" id="prdQty" value="")
+						input(type="number" class="mat-input form-control" id="prd_qty" value="")
 					
 					div(class="form-group pmd-textfield pmd-textfield-floating-label")
 						label(class="control-label") Keterangan
-						textarea(required, class="form-control", id="prdDescription")
+						textarea(required, class="form-control", id="prd_description")
 					
 			div(class="pmd-modal-action pmd-modal-bordered text-right")
-				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-primary" type="button") Save changes
-				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button") Discard
+				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-danger" style="float: left;" type="button") Batalkan
+				button(data-dismiss="modal" class="btn pmd-ripple-effect btn-primary" type="button") Simpan

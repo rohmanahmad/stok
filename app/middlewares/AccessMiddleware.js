@@ -5,7 +5,6 @@ const { getAccess } = require('../helpers/access')
 exports.ApiAccess = async (req, res, next) => {
     try {
         req.roleAccess = req.config.user.roleType
-        debugger
         next()
     } catch (err) {
         res.render('page-unauthorized')

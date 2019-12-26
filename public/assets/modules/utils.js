@@ -21,7 +21,7 @@ utils.sendXHR = function (opt) {
 }
 
 utils.jquery = function (selector) {
-    return $(selector);
+    return $(this.selectors[selector] || selector);
 }
 
 utils.getInputValue = function (selectors) { // selectors => object
@@ -38,3 +38,6 @@ utils.getInputValue = function (selectors) { // selectors => object
         alert(err.message);
     }
 }
+
+const currentUser = ls.getItem('username');
+$('#current-user').html(currentUser);
