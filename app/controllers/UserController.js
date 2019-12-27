@@ -4,6 +4,7 @@ const { getAccess } = require('../helpers/access')
 
 const errorMessage = function (obj = {}) {
     errorHandler({...obj, controller: 'User'})
+    console.log(obj.err)
 }
 
 // initiate the controller
@@ -19,12 +20,11 @@ controller.login = async (req, res, next) => {
 }
 controller.getUsers = async (req, res, next) => {
     try {
-        console.log(req.roleAccess)
         const access = getAccess(req.roleAccess, 'users')
+        console.log(req.roleAccess, access)
         const items = await userService.getUsers(req.query)
         res.send({ access, items })
     } catch (err) {
-        console.log(err)
         errorMessage({req, res, err})
     }
 }

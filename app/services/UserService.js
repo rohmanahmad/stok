@@ -1,6 +1,7 @@
 'use strict'
 
 const md5 = require('md5')
+const validate = require('validator')
 const UserModel = require('../models/Users')
 let service = {}
 const msg = 'Invalid Username and Password'
@@ -63,23 +64,35 @@ service.getNewUserID = async () => {
         throw err
     }
 }
-service.checkExists = async (username) => {
+service.checkExists = async (username, email) => {
     try {
-        const exists = await UserModel.findOne({username})
-        if (exists) throw new Error(`${username} already exists!`)
+        const exists = await UserModel.findOne({$or: [{username}, {email}]})
+        if (exists) throw new Error(`${username} or ${email} already exists!`)
+    } catch (err) {
+        throw err
+    }
+}
+
+function validateUserForm (data) {
+    try {
+        const {username, email, password} = data
+        if (!username || (username && username.length < 5)) throw new Error('Username Min 5 karakter')
+        if (!password || (password && password.length < 5)) throw new Error('Password Terlalu Pendek')
+        if (!validate.isEmail(email)) throw new Error(`${email} is not valid email`)
     } catch (err) {
         throw err
     }
 }
 service.create = async ({ username, password, confirm, email, roleType }) => {
     try {
-        if (password !== confirm) throw new Error('Password Doesnt Match')
+        if (password !== confirm) throw new Error('Password Tidak Cocok')
+        validateUserForm({ username, password, email, roleType })
         roleType = roleType === 'admin' ? 'admin' : 'user'
-        await this.checkExists(username)
+        await service.checkExists(username, email)
         const data = await UserModel.updateOne({username}, {
             $setOnInsert: {
-                _id: null,
-                userId: await this.getNewUserID(),
+                // _id: null,
+                userId: await service.getNewUserID(),
                 username,
                 password: md5(password),
                 email,

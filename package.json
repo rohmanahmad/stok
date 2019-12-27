@@ -23,7 +23,8 @@
     "md5": "^2.2.1",
     "mongoose": "^5.8.1",
     "pug": "^2.0.4",
-    "redis": "^2.8.0"
+    "redis": "^2.8.0",
+    "validator": "^12.1.0"
   },
   "devDependencies": {}
 }

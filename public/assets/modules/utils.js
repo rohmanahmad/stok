@@ -12,7 +12,6 @@ utils.sendXHR = function (opt) {
             resolve(res);
         }
         opt.error = function (err) {
-            debugger
             if (err.status === 402) window.location.href = '/logout';
             reject(err);
         }
@@ -28,12 +27,16 @@ utils.getInputValue = function (selectors) { // selectors => object
     try {
         if (!selectors) throw new Error('No Selector');
         if (Object.keys(selectors).length <= 0) throw new Error('No Selector Defined');
-        let jquerySelectors = {}
-        for (let x in selectors) {
-            const s = selectors[x];
-            jquerySelectors[x] = this.jquery(this.selectors[s] || s).val();
+        if (typeof selectors === 'object') {
+            let jquerySelectors = {}
+            for (let x in selectors) {
+                const s = selectors[x];
+                jquerySelectors[x] = this.jquery(this.selectors[s] || s).val();
+            }
+            return jquerySelectors;
+        } else {
+            return this.jquery(this.selectors[selectors] || selectors).val();
         }
-        return jquerySelectors;
     } catch (err) {
         alert(err.message);
     }

@@ -9,7 +9,8 @@ const access = {
 
 exports.getAccess = (type = 'user', controller) => {
     try {
-        return result(access, `[${type}][${controller}]`, {})
+        const acc = result(access, `[${type}][${controller}]`, null)
+        return acc
     } catch (err) {
         console.log(err)
         return []

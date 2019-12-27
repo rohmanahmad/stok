@@ -2,6 +2,13 @@ let fn = window.fn;
 
 fn.selectors = {
     contentUser: '#users-content',
+    btnAdd: '#modal-trigger-add',
+    'formUsername': '#username',
+    'formEmail': '#email',
+    'formRole': '#role',
+    'formPassword': '#password',
+    'formConfirm': '#confirm',
+    'formDescription': '#description',
 }
 
 fn.init = function () {
@@ -38,19 +45,18 @@ fn.updateRowUserData = function (data) {
     try {
         const access = data.access || {};
         if (access.add) {
-            fn.jquery('#form-user').show();
+            fn.jquery('btnAdd').removeClass('hide');
         } else {
-            fn.jquery('#form-user').hide();
+            fn.jquery('btnAdd').addClass('hide');
         }
         const editActions = access.edit ? `<a class='list-group-item list-group-item-warning' href='javascript:void(0);' onclick='fn.edit()'>Edit</a>` : '';
-        const removeActions = access.remove ? `<a class='list-group-item list-group-item-danger' href='javascript:void(0);' onclick='fn.delete()'>Delete</a>` : '';
+        const removeActions = access.delete ? `<a class='list-group-item list-group-item-danger' href='javascript:void(0);' onclick='fn.delete()'>Delete</a>` : '';
         
         let accessList = `
         <div class='list-group pmd-z-depth pmd-list pmd-card-list'>
             ${editActions}
             ${removeActions}
         </div>`;
-        // accessList = '<button>hello</button>'
         let rows = data.items.map((r) => {
             fn.listNumber += 1;
             const currentClass = r.status ? 'border-green' : 'border-red';
@@ -86,6 +92,38 @@ fn.updateRowUserData = function (data) {
 
 fn.activatePopover = function () {
     fn.jquery('[data-toggle="popover"]').popover();
+}
+
+fn.getValueFromModalUser = function () {
+    return {
+        username: fn.getInputValue('formUsername'),
+        email: fn.getInputValue('formEmail'),
+        role: fn.getInputValue('formRole'),
+        password: fn.getInputValue('formPassword'),
+        confirm: fn.getInputValue('formConfirm'),
+        description: fn.getInputValue('formDescription'),
+    }
+}
+
+fn.createNewUser = function () {
+    try {
+        const data = fn.getValueFromModalUser();
+        console.log(data);
+        if (data.password !== data.confirm) throw new Error('Password Doesn\'t Match');
+        fn.sendXHR({
+            url: '/api/users/create',
+            method: 'POST',
+            data
+        })
+            .then(function () {
+                fn.getUsers();
+            })
+            .catch(function (err) {
+                throw err;
+            });
+    } catch (err) {
+        alert(err.message);
+    }
 }
 
 fn.edit = function () {
