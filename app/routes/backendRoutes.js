@@ -27,5 +27,6 @@ router.get('/products/create', [TokenAuth, ApiAccess, ProductController.create])
 // users routes
 router.get('/users', [TokenAuth, ApiAccess, UserController.getUsers])
 router.post('/users/create', [TokenAuth, ApiAccess, UserController.create])
+router.delete('/users/:id', [TokenAuth, ApiAccess, UserController.deleteOne])
 
 module.exports = router

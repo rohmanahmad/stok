@@ -42,5 +42,37 @@ utils.getInputValue = function (selectors) { // selectors => object
     }
 }
 
+utils.setInputValue = function (selector, value) {
+    const obj = utils.jquery(selector);
+    obj.val = value;
+}
+
+utils.show = function (selectors = []) {
+    if (selectors) {
+        if (typeof selectors !== 'object') selectors = [selectors];
+        for (const selector of selectors) {
+            utils.jquery(selector).removeClass('hide');
+        }
+    }
+}
+
+utils.hide = function (selectors = []) {
+    if (selectors) {
+        if (typeof selectors !== 'object') selectors = [selectors];
+        for (const selector of selectors) {
+            utils.jquery(selector).addClass('hide');
+        }
+    }
+}
+
+utils.confirm = function (obj) {
+    const o = fn.jquery(obj)
+    const data = o.data();
+    utils.jquery('#confirmation').modal('show');
+    utils.jquery('#handle-yes')
+        .attr('onclick', data.action)
+        .attr('data-deleted', data.id);
+}
+
 const currentUser = ls.getItem('username');
 $('#current-user').html(currentUser);

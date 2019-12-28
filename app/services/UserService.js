@@ -41,11 +41,11 @@ service.getUsers = async ({ username, email, status, page, limit }, myusername) 
         limit = (limit && parseInt(limit) > 0) ? parseInt(limit) : 10
         page = (page && parseInt(page)) ? parseInt(page) : 1
         const skip = (page - 1) * limit
-        const data = await UserModel.find(criteria).skip(skip).limit(limit)
+        const data = await UserModel.find(criteria).sort({$natural: -1}).skip(skip).limit(limit)
         let row = []
         for (const r of data) {
-            const {email: e, username: u, roleType, status: s, userId, createdAt, updateAt} = r
-            row.push({email: e, username: u, roleType, status: s, userId, createdAt, updateAt})
+            const {email: e, username: u, roleType, status: s, userId, createdAt, updateAt, description} = r
+            row.push({dataId: r._id, email: e, username: u, roleType, status: s, userId, createdAt, updateAt, description})
         }
         return row
     } catch (err) {
@@ -66,8 +66,8 @@ service.getNewUserID = async () => {
 }
 service.checkExists = async (username, email) => {
     try {
-        const exists = await UserModel.findOne({$or: [{username}, {email}]})
-        if (exists) throw new Error(`${username} or ${email} already exists!`)
+        const exists = await UserModel.findOne({$or: [{ username }, { email }]})
+        if (exists) throw new Error('username atau email sudah terdaftar!')
     } catch (err) {
         throw err
     }
@@ -83,7 +83,7 @@ function validateUserForm (data) {
         throw err
     }
 }
-service.create = async ({ username, password, confirm, email, roleType }) => {
+service.create = async ({ username, password, confirm, email, roleType, description }) => {
     try {
         if (password !== confirm) throw new Error('Password Tidak Cocok')
         validateUserForm({ username, password, email, roleType })
@@ -98,6 +98,7 @@ service.create = async ({ username, password, confirm, email, roleType }) => {
                 email,
                 status: 1,
                 roleType,
+                description,
                 createAt: new Date(),
             },
             $set: {

@@ -11,6 +11,7 @@ const schema = new mongoose
         email: String,
         status: Number,
         roleType: String,
+        description: String,
         createAt: Date,
         updateAt: Date
     })

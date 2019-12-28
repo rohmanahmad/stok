@@ -3,6 +3,7 @@ module.exports = {
     users: {
         add: true,
         list: true,
+        // changepassword: true,
         edit: true,
         delete: true
     },

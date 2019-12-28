@@ -3,21 +3,30 @@ let fn = window.fn;
 fn.selectors = {
     contentUser: '#users-content',
     btnAdd: '#modal-trigger-add',
-    'formUsername': '#username',
-    'formEmail': '#email',
-    'formRole': '#role',
-    'formPassword': '#password',
-    'formConfirm': '#confirm',
-    'formDescription': '#description',
+    // modal create new
+    contentModalAdd: '#user-content-add',
+    contentModalChangePassword: '#user-content-change-password',
+    formUsername: '#username',
+    formEmail: '#email',
+    formRole: '#role',
+    formPassword: '#password',
+    formConfirm: '#confirm',
+    formDescription: '#description',
+    // modal change password & type
+    editFormType: '#edit-role',
+    editFormPassword: '#edit-password',
+    editFormConfirm: '#edit-confirm',
+    editFormDescription: '#edit-description',
 }
 
 fn.init = function () {
     fn.listNumber = 0;
+    fn.currentData = {};
     fn.getUsers();
 }
 
 fn.loadingUser = function () {
-    fn.jquery('contentUser').html('<tr><td colspan="6">Loading...</td></tr>');
+    fn.jquery('contentUser').html('<tr><td colspan="6">Memuat...</td></tr>');
 }
 
 fn.getUsers = function () {
@@ -45,19 +54,28 @@ fn.updateRowUserData = function (data) {
     try {
         const access = data.access || {};
         if (access.add) {
-            fn.jquery('btnAdd').removeClass('hide');
+            fn.show('btnAdd');
         } else {
-            fn.jquery('btnAdd').addClass('hide');
+            fn.hide('btnAdd');
         }
-        const editActions = access.edit ? `<a class='list-group-item list-group-item-warning' href='javascript:void(0);' onclick='fn.edit()'>Edit</a>` : '';
-        const removeActions = access.delete ? `<a class='list-group-item list-group-item-danger' href='javascript:void(0);' onclick='fn.delete()'>Delete</a>` : '';
+        const modalAttr = `href='#' data-toggle='modal'`;
+        const icons = {
+            edit: `<i class='material-icons md-dark pmd-sm' style='color: #fff;'>mode_edit</i>`,
+            delete: `<i class='material-icons md-dark pmd-sm' style='color: #fff;'>delete</i>`
+        }
         
-        let accessList = `
-        <div class='list-group pmd-z-depth pmd-list pmd-card-list'>
-            ${editActions}
-            ${removeActions}
-        </div>`;
+        fn.currentData = (data.items || []).reduce(function (res, row) {
+            res[row.dataId] = row;
+            return res;
+        }, {});
         let rows = data.items.map((r) => {
+            const editAction = access.edit ? `<a ${modalAttr} data-target='#modal-form-user' class='btn btn-xs btn-warning pmd-btn-fab btn-action' onclick='fn.edit(this)'>${icons['edit']}</a>` : '';
+            const removeAction = access.delete ? `<a ${modalAttr} class='btn btn-xs btn-danger pmd-btn-fab btn-action' data-id='${r.dataId}' data-action='fn.deleteConfirmation(this)' onclick='fn.confirm(this)'>${icons['delete']}</a>` : '';
+            let accessList = `
+            <div data-id='${r.dataId}' style='padding: 10px;'>
+                ${editAction}
+                ${removeAction}
+            </div>`;
             fn.listNumber += 1;
             const currentClass = r.status ? 'border-green' : 'border-red';
             const row = `<tr>
@@ -69,9 +87,8 @@ fn.updateRowUserData = function (data) {
                 <td data-title="Status">${r.status ? 'active': 'inactive'}</td>
                 <td data-title="Action">
                     <a href="javascript:void(0);"
-                        data-trigger="click"
+                        data-trigger="focus"
                         data-class="custom-popover"
-                        title="Available Actions"
                         data-toggle="popover"
                         data-placement="bottom"
                         data-content="${accessList}"
@@ -82,7 +99,7 @@ fn.updateRowUserData = function (data) {
             </tr>`;
             return row;
         });
-        if (rows.length === 0) rows = [`<tr><td colspan="6"> Data Not Found</td></tr>`];
+        if (rows.length === 0) rows = [`<tr><td colspan="6">Data Tidak Ditemukan</td></tr>`];
         fn.jquery('contentUser').html(rows.join(' '));
         fn.activatePopover();
     } catch (err) {
@@ -105,11 +122,15 @@ fn.getValueFromModalUser = function () {
     }
 }
 
+fn.setValueFromModalUser = function (data) {
+    fn.setInputValue('editFormType', data['roleType']);
+    fn.setInputValue('editFormDescription', data['description']);
+}
+
 fn.createNewUser = function () {
     try {
         const data = fn.getValueFromModalUser();
-        console.log(data);
-        if (data.password !== data.confirm) throw new Error('Password Doesn\'t Match');
+        if (data.password !== data.confirm) throw new Error('Password Tida Cocok');
         fn.sendXHR({
             url: '/api/users/create',
             method: 'POST',
@@ -126,8 +147,41 @@ fn.createNewUser = function () {
     }
 }
 
-fn.edit = function () {
+fn.initCreateNew = function () {
+    fn.show('contentModalAdd');
+    fn.hide('contentModalChangePassword');
+}
 
+fn.edit = function (obj) {
+    try {
+        const self = fn.jquery(obj);
+        const dataId = self.parent(0).data('id');
+        const currentRow = fn.currentData[dataId];
+        fn.hide('contentModalAdd');
+        fn.show('contentModalChangePassword');
+        fn.setValueFromModalUser(currentRow);
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+fn.deleteConfirmation = function (obj) {
+    try {
+        const self = fn.jquery(obj);
+        const dataId = self.data('deleted');
+        fn.sendXHR({
+            url: '/api/users/' + dataId,
+            method: 'DELETE'
+        })
+            .then(function () {
+                fn.getUsers();
+            })
+            .catch(function (err) {
+                throw err;
+            });
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 // init first time
