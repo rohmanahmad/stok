@@ -1,3 +1,5 @@
+'use strict'
+
 const userService = require('../services/userService')
 const errorHandler = require('../libs/errorHandler')
 const { getAccess } = require('../helpers/access')
@@ -21,8 +23,7 @@ controller.login = async (req, res, next) => {
 controller.getUsers = async (req, res, next) => {
     try {
         const access = getAccess(req.roleAccess, 'users')
-        console.log(req.roleAccess, access)
-        const items = await userService.getUsers(req.query)
+        const items = await suserService.getUsers(req.query)
         res.send({ access, items })
     } catch (err) {
         errorMessage({req, res, err})
@@ -31,6 +32,26 @@ controller.getUsers = async (req, res, next) => {
 controller.create = async (req, res, next) => {
     try {
         const data = await userService.create(req.body)
+        res.send(data)
+    } catch (err) {
+        errorMessage({req, res, err})
+    }
+}
+controller.updateOne = async (req, res, next) => {
+    try {
+        await userService.updateOne(req.params['id'], req.body)
+        res.send({
+            statusCode: 200,
+            message: 'Success'
+        })
+    } catch (err) {
+        errorMessage({req, res, err})
+    }
+}
+controller.deleteOne = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const data = await userService.deleteOne({ id })
         res.send(data)
     } catch (err) {
         errorMessage({req, res, err})

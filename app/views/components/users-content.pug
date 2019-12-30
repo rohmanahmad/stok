@@ -22,8 +22,9 @@ div(id="content", class="pmd-content content-area dashboard", style="padding-bot
 													th User ID
 													th Username
 													th Email
-													th Status
+													th Description
 													th 
+														input(type="hidden", name="filter-page", id="user-filter-page", value="1")
 											tbody(id="users-content")
 
 button(onclick="fn.initCreateNew()", id="modal-trigger-add", data-target="#modal-form-user", data-toggle="modal", class="btn pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary hide", style="position: fixed; bottom: 20px; right: 20px;")

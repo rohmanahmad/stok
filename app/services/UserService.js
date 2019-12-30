@@ -1,12 +1,12 @@
 'use strict'
 
-const md5 = require('md5')
-const validate = require('validator')
+const { validator, md5 } = require('../helpers/utils')
 const UserModel = require('../models/Users')
-let service = {}
-const msg = 'Invalid Username and Password'
 const { set } = require('../libs/redis')
+
 const exp = 12 * 60 * 60
+const msg = 'Invalid Username and Password'
+let service = {}
 
 service.login = async ({ username, password }) => {
     try {
@@ -78,7 +78,7 @@ function validateUserForm (data) {
         const {username, email, password} = data
         if (!username || (username && username.length < 5)) throw new Error('Username Min 5 karakter')
         if (!password || (password && password.length < 5)) throw new Error('Password Terlalu Pendek')
-        if (!validate.isEmail(email)) throw new Error(`${email} is not valid email`)
+        if (!validator.isEmail(email)) throw new Error(`${email} is not valid email`)
     } catch (err) {
         throw err
     }
@@ -106,6 +106,32 @@ service.create = async ({ username, password, confirm, email, roleType, descript
             }
         }, { upsert: true })
         return data
+    } catch (err) {
+        throw err
+    }
+}
+
+service.deleteOne = async ({ id }) => {
+    try {
+        if (!id || (id && id.length === 0)) throw new Error('Invalid Parameter')
+        await UserModel.deleteOne({_id: id})
+    } catch (err) {
+        throw err
+    }
+}
+
+service.updateOne = async (id, {role, password, confirm, description}) => {
+    try {
+        let data = {}
+        if (password) {
+            if (password !== confirm) throw new Error('Password Tidak Cocok')
+            data['password'] = md5(password)
+        }
+        role = role === 'admin' ? 'admin' : 'user'
+        data['roleType'] = role
+        data['description'] = description
+        data['updatedAt'] = new Date()
+        await UserModel.updateOne({ _id: id }, { $set: data })
     } catch (err) {
         throw err
     }

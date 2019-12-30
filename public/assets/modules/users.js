@@ -1,9 +1,13 @@
 let fn = window.fn;
+const limitPerPage = 10;
 
 fn.selectors = {
     contentUser: '#users-content',
     btnAdd: '#modal-trigger-add',
+    // filters
+    filterPage: '#user-filter-page',
     // modal create new
+    modalUser: '#modal-form-user',
     contentModalAdd: '#user-content-add',
     contentModalChangePassword: '#user-content-change-password',
     formUsername: '#username',
@@ -17,10 +21,10 @@ fn.selectors = {
     editFormPassword: '#edit-password',
     editFormConfirm: '#edit-confirm',
     editFormDescription: '#edit-description',
+    btnSave: '#btn-user-save'
 }
 
 fn.init = function () {
-    fn.listNumber = 0;
     fn.currentData = {};
     fn.getUsers();
 }
@@ -43,15 +47,18 @@ fn.getUsers = function () {
                 fn.updateRowUserData(data);
             })
             .catch(function (err) {
+                fn.alertError(err.error);
                 throw err;
             });
     } catch (err) {
-        console.error(err);
+        fn.alert(err.message);
     }
 }
 
 fn.updateRowUserData = function (data) {
     try {
+        const page = parseInt(fn.getInputValue('filterPage')) || 1;
+        let startPage = limitPerPage * (page - 1);
         const access = data.access || {};
         if (access.add) {
             fn.show('btnAdd');
@@ -68,37 +75,39 @@ fn.updateRowUserData = function (data) {
             res[row.dataId] = row;
             return res;
         }, {});
-        let rows = data.items.map((r) => {
-            const editAction = access.edit ? `<a ${modalAttr} data-target='#modal-form-user' class='btn btn-xs btn-warning pmd-btn-fab btn-action' onclick='fn.edit(this)'>${icons['edit']}</a>` : '';
-            const removeAction = access.delete ? `<a ${modalAttr} class='btn btn-xs btn-danger pmd-btn-fab btn-action' data-id='${r.dataId}' data-action='fn.deleteConfirmation(this)' onclick='fn.confirm(this)'>${icons['delete']}</a>` : '';
-            let accessList = `
-            <div data-id='${r.dataId}' style='padding: 10px;'>
-                ${editAction}
-                ${removeAction}
-            </div>`;
-            fn.listNumber += 1;
-            const currentClass = r.status ? 'border-green' : 'border-red';
-            const row = `<tr>
-                <td data-title="#" class="${currentClass}">${fn.listNumber}</td>
-                <td data-title="Role Type">${r.roleType}</td>
-                <td data-title="User ID">${r.userId}</td>
-                <td data-title="Username">${r.username}</td>
-                <td data-title="Email">${r.email}</td>
-                <td data-title="Status">${r.status ? 'active': 'inactive'}</td>
-                <td data-title="Action">
-                    <a href="javascript:void(0);"
-                        data-trigger="focus"
-                        data-class="custom-popover"
-                        data-toggle="popover"
-                        data-placement="bottom"
-                        data-content="${accessList}"
-                        data-html="true">
-                            <i class="material-icons md-dark pmd-sm">more_vert</i>
-                    </a>
-                </td>
-            </tr>`;
-            return row;
-        });
+        let rows = data.items
+            .filter(x => x.username !== currentUser)
+            .map((r) => {
+                const editAction = access.edit ? `<a ${modalAttr} data-target='#modal-form-user' class='btn btn-xs btn-warning pmd-btn-fab btn-action' onclick='fn.edit(this)'>${icons['edit']}</a>` : '';
+                const removeAction = access.delete ? `<a ${modalAttr} class='btn btn-xs btn-danger pmd-btn-fab btn-action' data-id='${r.dataId}' data-action='fn.deleteConfirmation(this)' onclick='fn.confirm(this)'>${icons['delete']}</a>` : '';
+                let accessList = `
+                <div data-id='${r.dataId}' style='padding: 10px;'>
+                    ${editAction}
+                    ${removeAction}
+                </div>`;
+                startPage += 1;
+                const currentClass = r.status ? 'border-green' : 'border-red';
+                const row = `<tr>
+                    <td data-title="#" class="${currentClass}">${startPage}</td>
+                    <td data-title="Role Type">${r.roleType}</td>
+                    <td data-title="User ID">${r.userId}</td>
+                    <td data-title="Username">${r.username}</td>
+                    <td data-title="Email">${r.email}</td>
+                    <td data-title="Description">${r.description || '-'}</td>
+                    <td data-title="Action">
+                        <a href="javascript:void(0);"
+                            data-trigger="focus"
+                            data-class="custom-popover"
+                            data-toggle="popover"
+                            data-placement="bottom"
+                            data-content="${accessList}"
+                            data-html="true">
+                                <i class="material-icons md-dark pmd-sm">more_vert</i>
+                        </a>
+                    </td>
+                </tr>`;
+                return row;
+            });
         if (rows.length === 0) rows = [`<tr><td colspan="6">Data Tidak Ditemukan</td></tr>`];
         fn.jquery('contentUser').html(rows.join(' '));
         fn.activatePopover();
@@ -138,6 +147,7 @@ fn.createNewUser = function () {
         })
             .then(function () {
                 fn.getUsers();
+                fn.hideModal('modalUser');
             })
             .catch(function (err) {
                 throw err;
@@ -160,8 +170,39 @@ fn.edit = function (obj) {
         fn.hide('contentModalAdd');
         fn.show('contentModalChangePassword');
         fn.setValueFromModalUser(currentRow);
+        fn.jquery('btnSave').attr('data-id', dataId);
     } catch (err) {
-        console.log(err)
+        fn.alert(err.message);
+    }
+}
+
+fn.updateUser = function (obj) {
+    try {
+        const id = fn.jquery(obj).data('id');
+        const data = {
+            role: fn.getInputValue('editFormType'),
+            password: fn.getInputValue('editFormPassword'),
+            confirm: fn.getInputValue('editFormConfirm'),
+            description: fn.getInputValue('editFormDescription')
+        }
+        if (data.password !== '') {
+            if (data.password !== data.confirm) throw new Error('Password Tidak Cocok');
+        }
+        if (!id) throw new Error('Id Tidak Valid');
+        fn.sendXHR({
+            url: '/api/users/update/' + id,
+            method: 'PUT',
+            data
+        })
+            .then(function () {
+                fn.getUsers();
+                fn.hideModal('modalUser');
+            })
+            .then(function (err) {
+                throw err;
+            });
+    } catch (err) {
+        fn.alert(err.message);
     }
 }
 
@@ -180,7 +221,7 @@ fn.deleteConfirmation = function (obj) {
                 throw err;
             });
     } catch (err) {
-        console.log(err);
+        fn.alert(err.message);
     }
 }
 

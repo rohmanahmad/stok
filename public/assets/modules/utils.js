@@ -4,16 +4,27 @@ const ls = localStorage;
 let utils = window.fn;
 utils.currentToken = ls.getItem('token');
 
+utils.alertError = function (message = '', options = {}) {
+    const template = `
+        <div class="pmd-alert-container right bottom alert-dismissible" style="width: 360px;">
+            <div class="pmd-alert visible fadeInDown" data-action="true">
+                ${message}
+                <a href="javascript:void(0)" class="pmd-alert-close" data-dismiss="alert">×</a>
+            </div>
+        </div>`;
+    fn.jquery('body').append(template);
+}
+
 utils.sendXHR = function (opt) {
-    if (!opt.headers) opt.headers = {}
-    if (utils.currentToken) opt.headers['x-auth-token'] = utils.currentToken;
     return new Promise(function (resolve, reject) {
+        if (!opt.headers) opt.headers = {}
+        if (utils.currentToken) opt.headers['x-auth-token'] = utils.currentToken;
         opt.success = function (res) {
             resolve(res);
         }
         opt.error = function (err) {
             if (err.status === 402) window.location.href = '/logout';
-            reject(err);
+            reject(err.responseJSON);
         }
         $.ajax(opt);
     })
@@ -44,7 +55,7 @@ utils.getInputValue = function (selectors) { // selectors => object
 
 utils.setInputValue = function (selector, value) {
     const obj = utils.jquery(selector);
-    obj.val = value;
+    obj.val(value);
 }
 
 utils.show = function (selectors = []) {
@@ -72,6 +83,18 @@ utils.confirm = function (obj) {
     utils.jquery('#handle-yes')
         .attr('onclick', data.action)
         .attr('data-deleted', data.id);
+}
+
+utils.showModal = function (selector = '') {
+    if (selector) {
+        utils.jquery(selector).modal('show');
+    }
+}
+
+utils.hideModal = function (selector = '') {
+    if (selector) {
+        utils.jquery(selector).modal('hide');
+    }
 }
 
 const currentUser = ls.getItem('username');

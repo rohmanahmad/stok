@@ -62,7 +62,7 @@ div(tabindex="-1", class="modal fade", id="modal-form-user", aria-hidden="true")
 					
 			div(class="pmd-modal-action pmd-modal-bordered text-right")
 				button(data-dismiss="modal", class="btn pmd-ripple-effect btn-danger", style="float: left;", type="button") Batalkan
-				button(class="btn pmd-ripple-effect btn-primary", type="button", onclick="fn.createNewUser()") Simpan
+				button(class="btn pmd-ripple-effect btn-primary", type="button", onclick="fn.updateUser(this)", id="btn-user-save") Simpan
 
 //- Transactions
 div(tabindex="-1", class="modal fade", id="form-transaction", aria-hidden="true")
@@ -142,3 +142,17 @@ div(tabindex="-1", class="modal fade", id="confirmation", role="dialog", aria-la
 					div(class="col-12", style="text-align: center;")
 						button(data-dismiss="modal", class="btn btn-sm btn-warning") Tidak
 						button(data-dismiss="modal", class="btn btn-sm btn-primary", id="handle-yes", style="margin-left: 40px;") Ya
+
+
+//- div(class="pmd-alert-container right bottom" style="width: 360px;")
+//- 	div(class="pmd-alert visible fadeInDown" data-action="true") You have 6 messages
+//- 		a(href="javascript:void(0)" class="pmd-alert-close" onclick="(undefined)()") ×
+
+div(role="alert" class="alert alert-danger alert-dismissible")
+	button(aria-label="Close" data-dismiss="alert" class="close" type="button")
+		span(aria-hidden="true") ×
+		| Oh snap! Change a few things up and try submitting again.
+
+<div class="alert alert-dark" role="alert"> A simple dark alert with
+	<a href="#" class="alert-link">an example link</a> Give it a click if you like.
+</div>
