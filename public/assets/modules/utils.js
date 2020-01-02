@@ -5,14 +5,22 @@ let utils = window.fn;
 utils.currentToken = ls.getItem('token');
 
 utils.alertError = function (message = '', options = {}) {
+    const templateId = new Date().getTime();
     const template = `
-        <div class="pmd-alert-container right bottom alert-dismissible" style="width: 360px;">
-            <div class="pmd-alert visible fadeInDown" data-action="true">
+        <div class="pmd-alert-container right top alert-dismissible alert-${templateId}" style="margin-top: 50px;right: 10px;">
+            <div class="pmd-alert visible fadeInDown" data-action="true" style="min-width: 100px;width: auto;padding-right: 20px;">
                 ${message}
-                <a href="javascript:void(0)" class="pmd-alert-close" data-dismiss="alert">×</a>
+                <a href="javascript:void(0)" class="pmd-alert-close" onclick="fn.dismissAlert('${templateId}')">×</a>
             </div>
         </div>`;
     fn.jquery('body').append(template);
+    setTimeout(function () {
+        utils.dismissAlert(templateId);
+    }, 5 * 1000);
+}
+
+utils.dismissAlert = function (templateId) {
+    fn.jquery(`.alert-${templateId}`).remove();
 }
 
 utils.sendXHR = function (opt) {

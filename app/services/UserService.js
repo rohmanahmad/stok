@@ -19,9 +19,9 @@ service.login = async ({ username, password }) => {
             password: md5(password)
         })
         if (!data) throw new Error(msg)
-        const { roleType } = data
+        const { roleType, userId } = data
         const newExp = new Date().getTime() + exp
-        const stringData = JSON.stringify({ username, roleType, exp: newExp })
+        const stringData = JSON.stringify({ username, userId, roleType, exp: newExp })
         const key = md5(stringData)
         set({ key, value: stringData, exp }) // 12 jam
         return { token: key, username, roleType, exp: newExp }

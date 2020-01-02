@@ -23,7 +23,7 @@ controller.login = async (req, res, next) => {
 controller.getUsers = async (req, res, next) => {
     try {
         const access = getAccess(req.roleAccess, 'users')
-        const items = await suserService.getUsers(req.query)
+        const items = await userService.getUsers(req.query)
         res.send({ access, items })
     } catch (err) {
         errorMessage({req, res, err})

@@ -5,11 +5,11 @@ const mongoose = require('mongoose')
 const schema = new mongoose
     .Schema({
         _id: mongoose.Types.ObjectId,
-        kodeProduct: String,
+        productCode: String,
         userId: String,
-        namaProduct: String,
-        stok: Number,
-        keterangan: String,
+        productName: String,
+        stock: Number,
+        description: String,
         createAt: Date,
         updateAt: Date
     })

@@ -22,7 +22,9 @@ router.post('/user/login', [UserController.login])
 
 // product routes
 router.get('/products', [TokenAuth, ApiAccess, ProductController.getProduct])
-router.get('/products/create', [TokenAuth, ApiAccess, ProductController.create])
+router.post('/products/create', [TokenAuth, ApiAccess, ProductController.create])
+router.delete('/products/:id', [TokenAuth, ApiAccess, ProductController.deleteOne])
+router.put('/products/update/:id', [TokenAuth, ApiAccess, ProductController.updateOne])
 
 // users routes
 router.get('/users', [TokenAuth, ApiAccess, UserController.getUsers])

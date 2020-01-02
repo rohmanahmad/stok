@@ -7,6 +7,20 @@ module.exports = {
         edit: true,
         delete: true
     },
+    products: {
+        add: true,
+        list: true,
+        edit: true,
+        delete: true
+    },
+    transactions: {
+        add: true,
+        list: true,
+        edit: true,
+        delete: true
+    },
     // routes
-    '/users': true
+    '/users': true,
+    '/products': true,
+    '/transactions': true
 }
