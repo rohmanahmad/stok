@@ -29,6 +29,7 @@ service.login = async ({ username, password }) => {
         throw err
     }
 }
+
 service.getUsers = async ({ username, email, status, page, limit }, myusername) => {
     try {
         let criteria = {}
@@ -52,6 +53,7 @@ service.getUsers = async ({ username, email, status, page, limit }, myusername) 
         throw err
     }
 }
+
 service.getNewUserID = async () => {
     try {
         const pattern = 'U-000'
@@ -64,6 +66,7 @@ service.getNewUserID = async () => {
         throw err
     }
 }
+
 service.checkExists = async (username, email) => {
     try {
         const exists = await UserModel.findOne({$or: [{ username }, { email }]})
@@ -78,11 +81,12 @@ function validateUserForm (data) {
         const {username, email, password} = data
         if (!username || (username && username.length < 5)) throw new Error('Username Min 5 karakter')
         if (!password || (password && password.length < 5)) throw new Error('Password Terlalu Pendek')
-        if (!validator.isEmail(email)) throw new Error(`${email} is not valid email`)
+        if (!validator.isEmail(email)) throw new Error(`"${email}" Bukan Format Email yg Benar`)
     } catch (err) {
         throw err
     }
 }
+
 service.create = async ({ username, password, confirm, email, roleType, description }) => {
     try {
         if (password !== confirm) throw new Error('Password Tidak Cocok')

@@ -6,7 +6,7 @@ validator.required = function (input = {}) {
     try {
         for (const key in input) {
             const value = input[key]
-            if (!value || (value && value.length <= 0)) throw new Error(`${key} required`)
+            if (!value || (value && value.length <= 0)) throw new Error(`"${key}" Tidak Boleh Kosong`)
         }
         return input
     } catch (err) {
@@ -18,7 +18,7 @@ validator.isNumber = function (input = {}) {
     try {
         for (const key in input) {
             const value = input[key]
-            if (typeof value !== 'number') throw new Error(`${key} is not a number`)
+            if (typeof value !== 'number') throw new Error(`"${key}" Harus Angka`)
         }
         return input
     } catch (err) {
@@ -30,7 +30,7 @@ validator.isString = function (input = {}) {
     try {
         for (const key in input) {
             const value = input[key]
-            if (typeof value !== 'string') throw new Error(`${key} is not a string`)
+            if (typeof value !== 'string') throw new Error(`"${key}" Harus Text`)
         }
         return input
     } catch (err) {

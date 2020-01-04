@@ -89,6 +89,7 @@ fn.updateRowProductData = function (data) {
                     <td data-title="Kode Produk">${r.productCode}</td>
                     <td data-title="Nama Produk">${r.productName}</td>
                     <td data-title="Stok">${r.stock}</td>
+                    <td data-title="Dibuat">${moment(r.createdAt).format('LLL')}</td>
                     <td data-title="Keterangan">${r.description || '-'}</td>
                     <td data-title="Action">
                         <a href="javascript:void(0);"
@@ -182,10 +183,10 @@ fn.updateProduct = function (obj) {
     try {
         const id = fn.jquery(obj).data('id');
         const data = {
-            prdId: fn.getInputValue('formPrdId'),
-            prdName: fn.getInputValue('formPrdName'),
-            prdQty: fn.getInputValue('formPrdQty'),
-            prdDescription: fn.getInputValue('formPrdDescription')
+            // prdId: fn.getInputValue('editFormPrdId'),
+            prdName: fn.getInputValue('editFormPrdName'),
+            prdQty: fn.getInputValue('editFormPrdQty'),
+            prdDescription: fn.getInputValue('editFormPrdDescription')
         }
         if (data.password !== '') {
             if (data.password !== data.confirm) throw new Error('Password Tidak Cocok');
@@ -210,8 +211,9 @@ fn.updateProduct = function (obj) {
 
 fn.deleteConfirmation = function (obj) {
     try {
+        debugger
         const self = fn.jquery(obj);
-        const dataId = self.data('deleted');
+        const dataId = self[0].dataset['deleted'];
         fn.sendXHR({
             url: '/api/products/' + dataId,
             method: 'DELETE'

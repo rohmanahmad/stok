@@ -1,0 +1,66 @@
+mixin trxfilters(prefix)
+    .row
+        .col-md-3 
+            div(class="form-group pmd-textfield pmd-textfield", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") Tanggal
+                input(type="date", id="trxfilter-"+ prefix +"-date", class="form-control")
+                span(class="pmd-textfield-focused")
+        .col-md-3 
+            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") Kode Produk
+                input(type="text", id="trxfilter-"+ prefix +"-prdcode", class="form-control")
+                span(class="pmd-textfield-focused")
+        .col-md-1
+            button(class="btn pmd-ripple-effect btn-primary", onclick="fn.getTransactions()", data-type="#{ prefix }" style="min-width: 50px;float: right; margin-top:10px; margin-right: 10px;")
+                i(class="material-icons pmd-xs") search
+
+mixin prdfilter
+    .row
+        .col-md-3 
+            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") Kode Produk
+                input(type="text", id="filter-prd-code", class="form-control")
+                span(class="pmd-textfield-focused")
+        .col-md-3 
+            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") Nama Produk
+                input(type="text", id="filter-prd-name", class="form-control")
+                span(class="pmd-textfield-focused")
+        .col-md-3 
+            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") User ID
+                input(type="text", id="filter-prd-userid", class="form-control")
+                span(class="pmd-textfield-focused")
+        .col-md-2 
+            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") Status
+                select(id="filter-prd-status", class="form-control")
+                    option(value="1") Aktif
+                    option(value="0") Non Aktif
+                span(class="pmd-textfield-focused")
+        .col-md-1
+            button(class="btn pmd-ripple-effect btn-primary", onclick="fn.getProducts()", style="min-width: 50px;float: right; margin-top:10px; margin-right: 10px;")
+                i(class="material-icons pmd-xs") search
+
+mixin usrfilter
+    .row
+        .col-md-3
+            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") Email
+                input(type="text", id="filter-usr-email", class="form-control")
+                span(class="pmd-textfield-focused")
+        .col-md-3
+            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") Username
+                input(type="text", id="filter-usr-name", class="form-control")
+                span(class="pmd-textfield-focused")
+        .col-md-3
+            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+                label(for="regular1", class="control-label") Status
+                select(id="filter-usr-status", class="form-control")
+                    option(value="1") Aktif
+                    option(value="0") Non Aktif
+                span(class="pmd-textfield-focused")
+        .col-md-1
+            button(class="btn pmd-ripple-effect btn-primary", onclick="fn.getUsers()", style="min-width: 50px;float: right; margin-top:10px; margin-right: 10px;")
+                i(class="material-icons pmd-xs") search

@@ -18,13 +18,16 @@ controller.forgot= (req, res) => {
 }
 controller.products = async (req, res) => {
     const data = await ProductServices.list(req.body)
-    res.render('products', { activeMenu: 'products', title: 'Produk', data })
+    const cache = req.config.cache
+    res.render('products', { activeMenu: 'products', title: 'Produk', data, cache })
 }
 controller.transactions = (req, res) => {
-    res.render('transactions', {activeMenu: 'transactions', title: "Transaksi"})
+    const cache = req.config.cache
+    res.render('transactions', {activeMenu: 'transactions', title: "Transaksi", cache})
 }
 controller.users = (req, res) => {
-    res.render('users', {activeMenu: 'users', title: "User"})
+    const cache = req.config.cache
+    res.render('users', {activeMenu: 'users', title: "User", cache})
 }
 
 module.exports = controller

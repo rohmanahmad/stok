@@ -1,3 +1,9 @@
+Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+});
+
 window.fn = {}
 const ls = localStorage;
 
@@ -8,7 +14,7 @@ utils.alertError = function (message = '', options = {}) {
     const templateId = new Date().getTime();
     const template = `
         <div class="pmd-alert-container right top alert-dismissible alert-${templateId}" style="margin-top: 50px;right: 10px;">
-            <div class="pmd-alert visible fadeInDown" data-action="true" style="min-width: 100px;width: auto;padding-right: 20px;">
+            <div class="pmd-alert visible fadeInDown" data-action="true" style="min-width: 100px;width: auto;padding-right: 35px;">
                 ${message}
                 <a href="javascript:void(0)" class="pmd-alert-close" onclick="fn.dismissAlert('${templateId}')">×</a>
             </div>

@@ -9,6 +9,7 @@ service.create = async ({ userId, prdId, prdName, prdQty, prdDescription }) => {
         let data = Validation.required({ userId, prdId, prdName, prdQty })
         data = Validation.isString({productCode: prdId, productName: prdName, description: prdDescription})
         data = {...data, ...Validation.isNumber({ stock: parseInt(prdQty) })}
+        data['status'] = 1
         if (await ProductModel.findOne({ productCode: prdId })) throw new Error(`Product "${prdId}" already exists.`)
         data = await ProductModel.updateOne({ productCode: prdId }, {
             $setOnInsert: {
@@ -46,13 +47,37 @@ service.updateOne = async (id, {prdId, prdName, prdDescription, prdQty}) => {
     try {
         let data = {}
         data['productId'] = prdId
-        data['productQty'] = prdQty
+        data['stock'] = parseInt(prdQty)
         data['productName'] = prdName
         data['description'] = prdDescription
         data['updatedAt'] = new Date()
+        data['status'] = 1
         await ProductModel.updateOne({ _id: id }, { $set: data })
     } catch (err) {
         throw err
     }
 }
+
+service.getOne = async ({id, productCode}) => {
+    try {
+        let criteria = {}
+        if (id) criteria['_id'] = id
+        if (productCode) criteria['productCode'] = productCode
+        return await ProductModel.findOne(criteria)
+    } catch (err) {
+        throw err
+    }
+}
+
+service.updateStock = async ({id, newStock}) => {
+    try {
+        await ProductModel.updateOne({_id: id}, {$set: {
+            updatedAt: new Date(),
+            stock: newStock
+        }})
+    } catch (err) {
+        throw err
+    }
+}
+
 module.exports = service

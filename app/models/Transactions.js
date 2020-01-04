@@ -5,16 +5,18 @@ const mongoose = require('mongoose')
 const schema = new mongoose
     .Schema({
         _id: mongoose.Types.ObjectId,
-        productCode: String,
         userId: String,
-        productName: String,
-        stock: Number,
+        type: String,
+        date: String,
+        prdCode: String,
+        qty: Number,
+        nominal: Number,
         description: String,
         status: Number,
         createAt: Date,
         updateAt: Date
     })
 
-const model = mongoose.model('products', schema, 'products')
+const model = mongoose.model('transactions', schema, 'transactions')
 
 module.exports = model

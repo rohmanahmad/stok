@@ -4,7 +4,7 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         meta(http-equiv="X-UA-Compatible", content="ie=edge")
-        title Dashboard
+        title Products | Dashboard
         link(rel="stylesheet", href="//fonts.googleapis.com/icon?family=Material+Icons")
         link(rel="stylesheet", href="/vendor/bootstrap/css/bootstrap.min.css")
         link(rel="stylesheet", href="/vendor/propeller/css/propeller.min.css")
@@ -13,13 +13,15 @@ html(lang="en")
         link(rel="stylesheet", href="/assets/css/style.css")
     body
         //- start content
+        include components/mixins/filters.pug
+        include components/mixins/modals.pug
         include components/header.pug
         include components/menu.pug
         include components/products-content.pug
-        include components/modals.pug
         //- end content
         script(src="/vendor/jquery/jquery-1.12.2.min.js")
         script(src="/vendor/bootstrap/js/bootstrap.min.js")
         script(src="/vendor/propeller/js/propeller.min.js")
-        script(src="/assets/modules/utils.js")
-        script(src="/assets/modules/products.js")
+        script(src="/vendor/moment/moment.min.js")
+        script(src="/assets/modules/utils.js?q=" + cache)
+        script(src="/assets/modules/products.js?q=" + cache)

@@ -6,6 +6,7 @@ const router = express.Router()
 // controllers
 const ProductController = require('../controllers/ProductController')
 const UserController = require('../controllers/UserController')
+const TransactionController = require('../controllers/TransactionController')
 
 // middlewares
 const TokenAuth = require('../middlewares/TokenAuthMiddleware')
@@ -31,5 +32,10 @@ router.get('/users', [TokenAuth, ApiAccess, UserController.getUsers])
 router.post('/users/create', [TokenAuth, ApiAccess, UserController.create])
 router.delete('/users/:id', [TokenAuth, ApiAccess, UserController.deleteOne])
 router.put('/users/update/:id', [TokenAuth, ApiAccess, UserController.updateOne])
+
+// transactions routes
+router.get('/transactions', [TokenAuth, ApiAccess, TransactionController.getTransactions])
+router.post('/transactions/create', [TokenAuth, ApiAccess, TransactionController.create])
+router.delete('/transactions/:id', [TokenAuth, ApiAccess, TransactionController.deleteOne])
 
 module.exports = router

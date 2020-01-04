@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
         let user = await get(xheader)
         if (!user || (user && user.length === 0)) throw new Error('Invalid Session Data')
         user = JSON.parse(user)
-        req.config = { user }
+        req.config = { user, cache: xheader }
         if (!req.activityCreated) req.activityCreated = await createActivity({req})
         next()
     } catch (err) {

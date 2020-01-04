@@ -48,10 +48,9 @@ fn.getUsers = function () {
             })
             .catch(function (err) {
                 fn.alertError(err.error);
-                throw err;
             });
     } catch (err) {
-        fn.alert(err.message);
+        fn.alertError(err.message);
     }
 }
 
@@ -150,7 +149,7 @@ fn.createNewUser = function () {
                 fn.hideModal('modalUser');
             })
             .catch(function (err) {
-                throw err;
+                fn.alertError(err.error);
             });
     } catch (err) {
         alert(err.message);
@@ -172,7 +171,7 @@ fn.edit = function (obj) {
         fn.setValueFromModalUser(currentRow);
         fn.jquery('btnSave').attr('data-id', dataId);
     } catch (err) {
-        fn.alert(err.message);
+        fn.alertError(err.message);
     }
 }
 
@@ -185,6 +184,7 @@ fn.updateUser = function (obj) {
             confirm: fn.getInputValue('editFormConfirm'),
             description: fn.getInputValue('editFormDescription')
         }
+        debugger
         if (data.password !== '') {
             if (data.password !== data.confirm) throw new Error('Password Tidak Cocok');
         }
@@ -199,17 +199,17 @@ fn.updateUser = function (obj) {
                 fn.hideModal('modalUser');
             })
             .then(function (err) {
-                throw err;
+                fn.alertError(err.error);
             });
     } catch (err) {
-        fn.alert(err.message);
+        fn.alertError(err.message);
     }
 }
 
 fn.deleteConfirmation = function (obj) {
     try {
         const self = fn.jquery(obj);
-        const dataId = self.data('deleted');
+        const dataId = self[0].dataset['deleted'];
         fn.sendXHR({
             url: '/api/users/' + dataId,
             method: 'DELETE'
@@ -218,10 +218,10 @@ fn.deleteConfirmation = function (obj) {
                 fn.getUsers();
             })
             .catch(function (err) {
-                throw err;
+                fn.alertError(err.error);
             });
     } catch (err) {
-        fn.alert(err.message);
+        fn.alertError(err.message);
     }
 }
 
