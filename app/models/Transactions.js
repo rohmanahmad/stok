@@ -7,7 +7,7 @@ const schema = new mongoose
         _id: mongoose.Types.ObjectId,
         userId: String,
         type: String,
-        date: String,
+        date: Date,
         prdCode: String,
         qty: Number,
         nominal: Number,

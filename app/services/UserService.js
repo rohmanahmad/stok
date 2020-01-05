@@ -5,7 +5,7 @@ const UserModel = require('../models/Users')
 const { set } = require('../libs/redis')
 
 const exp = 12 * 60 * 60
-const msg = 'Invalid Username and Password'
+const msg = 'Username dan Password Salah'
 let service = {}
 
 service.login = async ({ username, password }) => {
