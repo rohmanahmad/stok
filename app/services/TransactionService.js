@@ -30,9 +30,12 @@ service.create = async ({ userId, type, date, prdCode, qty, description }) => {
         throw err
     }
 }
-service.list = async ({ prdcode, date, type }) => {
+service.list = async ({ prdcode, date, type, limit, page }) => {
     try {
         let criteria = {}
+        limit = parseInt(limit) > 0 ? parseInt(limit) : 10
+        page = parseInt(page) > 0 ? parseInt(page) : 1
+        const skip = limit * (page -1)
         if (type === 'in') criteria['type'] = 'in'
         if (type === 'out') criteria['type'] = 'out'
         if (prdcode && prdcode.length > 0) criteria['prdCode'] = new RegExp(prdcode.trim(), 'i')
@@ -45,6 +48,12 @@ service.list = async ({ prdcode, date, type }) => {
             },
             {
                 $sort: { date: -1, createdAt: -1 }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: limit
             },
             {
                 $lookup: {

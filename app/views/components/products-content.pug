@@ -1,6 +1,6 @@
 div(id="content", class="pmd-content content-area dashboard", style="padding-bottom: 20px;")
 	div(class="container-fluid")
-		div(class=", component-box") 
+		div(class="component-box") 
 			div(class="pmd-card pmd-z-depth") 
 				div(class="pmd-tabs")
 					div(class="pmd-tab-active-bar", style="width: 104px; left: 0px;")
@@ -25,25 +25,11 @@ div(id="content", class="pmd-content content-area dashboard", style="padding-bot
 													th Dibuat
 													th Keterangan
 													th 
+														input(type="hidden", id="product-filter-page", value="1")
 											tbody(id="products-content")
-												tr
-													td(data-title="#") 1
-													td(data-title="Kode Produk") P-001
-													td(data-title="Nama Produk") Produk 1
-													td(data-title="Stok") 10
-													td(data-title="Keterangan") Untuk Beasiswa
-													td(data-title="Action")
-														a(href="javascript:void(0);")
-															i(class="material-icons md-dark pmd-sm") more_vert
-												tr
-													td(data-title="#") 1
-													td(data-title="Kode Produk") P-002
-													td(data-title="Nama Produk") Produk 2
-													td(data-title="Stok") 100
-													td(data-title="Keterangan") Untuk Bantuan Bencana Alam
-													td(data-title="Action")
-														a(href="javascript:void(0);", data-trigger="click", title="Popover Left Title", data-toggle="popover", data-placement="left", data-content="Popover Left")
-															i(class="material-icons md-dark pmd-sm") more_vert
+									div(class="pmd-table-card")
+										div(class="row tfooter")
+											div(class="col-md-12", id="products-footer")
 
 button(onclick="fn.initCreateNew()", id="modal-trigger-add", data-target="#modal-form-product", data-toggle="modal", class="btn pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary hide", style="position: fixed; bottom: 20px; right: 20px;")
 	i(class="material-icons pmd-sm") add

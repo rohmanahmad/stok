@@ -14,6 +14,7 @@ fn.listenEnter = function () {
 fn.init = function () {
     ls.clear();
     fn.listenEnter();
+    fn.jquery('#top-icon-menus').remove();
 }
 
 fn.doLogin = function () {

@@ -1,5 +1,5 @@
 let fn = window.fn;
-const limitPerPage = 10;
+const limitPerPage = 2;
 
 fn.selectors = {
     contentTrxAll: '#transactions-all-content',
@@ -29,7 +29,7 @@ fn.init = function () {
 }
 
 fn.loadingTrx = function () {
-    fn.jquery(`#transaction-${fn.currentTab}-content`).html('<tr><td colspan="6">Memuat...</td></tr>');
+    fn.jquery(`#transaction-${fn.currentTab}-content`).append('<tr id="loading"><td colspan="6">Memuat...</td></tr>');
 }
 
 fn.getFilters = function (type = 'all') {
@@ -37,13 +37,15 @@ fn.getFilters = function (type = 'all') {
         date: `#trxfilter-${type}-date`,
         prdcode: `#trxfilter-${type}-prdcode`,
     });
-    return {...data, type};
+    const page = parseInt(fn.jquery(`#trxfilter-${type}-page`).val());
+    return {...data, page, limit: limitPerPage, type};
 }
 
-fn.getTransactions = function () {
+fn.getTransactions = function (isLoadMore = false) {
     try {
         const type = fn.currentTab;
         const data = fn.getFilters(type);
+        if (!isLoadMore) fn.jquery(`#trxfilter-${type}-page`).val(1);
         fn.sendXHR({
             url: '/api/transactions',
             method: 'GET',
@@ -53,7 +55,7 @@ fn.getTransactions = function () {
             data
         })
             .then(function (data) {
-                fn.updateRowTrxData(type, data);
+                fn.updateRowTrxData(type, data, isLoadMore);
             })
             .catch(function (err) {
                 fn.alertError(err.error);
@@ -63,14 +65,13 @@ fn.getTransactions = function () {
     }
 }
 
-fn.updateRowTrxData = function (type = 'all', data) {
+fn.updateRowTrxData = function (type = 'all', data = {}, isLoadMore = false) {
     try {
         const items = data.items || [];
-        const actions = data.actions || {};
-        const page = parseInt(fn.jquery(`#trxfilter-${type}-page`)) || 1;
+        const page = parseInt(fn.jquery(`#trxfilter-${type}-page`).val()) || 1;
         let nStart = (page - 1) * limitPerPage;
         const body = fn.jquery(`#transactions-${type}-content`);
-        body.html('');
+        if (!isLoadMore) body.html('');
         for (const r in items) {
             const d = items[r];
             const classBg = (d.type === 'in') ? 'border-green' : 'border-red';
@@ -78,19 +79,41 @@ fn.updateRowTrxData = function (type = 'all', data) {
             nStart += 1;
             let tr = '<tr>';
             tr += `<td data-title="#" class="${classBg}">${ nStart }</td>`;
-            tr += `<td data-title="Tanggal">${ moment(d.date).format('LL') }</td>`;
+            tr += `<td data-title="Tanggal">${ moment(d.date).format('DD MMM YYYY') }</td>`;
             tr += `<td data-title="Tipe Transaksi">${ d.type || '-' }</td>`;
             tr += `<td data-title="Kode Produk">${ d.prdCode || '-' }</td>`;
             tr += `<td data-title="Nama Produk">${ prdName || '-' }</td>`;
             tr += `<td data-title="Qty Produk">${ d.qty || 0 }</td>`;
-            tr += `<td data-title="Dibuat">${ moment(d.createdAt).format('LLL') }</td>`;
+            tr += `<td data-title="Dibuat">${ moment(d.createdAt).format('DD/MM/YYYY H:m') }</td>`;
             tr += `<td data-title="Keterangan">${ d.description || '-' }</td>`;
             tr += '</tr>';
             body.append(tr);
         }
+        if (items.length === limitPerPage) {
+            fn.jquery(`#transactions-${type}-footer`).html(fn.isButtonMore(true, type));
+        } else {
+            fn.jquery(`#transactions-${type}-footer`).html(fn.isButtonMore(false, type));
+        }
     } catch (err) {
         fn.alertError(err.message);
     }
+}
+
+fn.showMore = function (type = 'all') {
+    try {
+        const d = fn.getFilters(type);
+        fn.jquery(`#trxfilter-${type}-page`).val(d.page + 1);
+        fn.getTransactions(true); //loadmore = true
+    } catch (err) {
+        throw err;
+    }
+}
+
+fn.isButtonMore = function (status = true, type = 'all') {
+    if (status) {
+        return `<button onclick="fn.showMore('${type}');" class="btn btn-primary btn-xs pmd-btn-raised pmd-ripple-effect">Tampilkan Lebih Banyak...</button>`;
+    }
+    return '';
 }
 
 fn.getFormModal = function () {

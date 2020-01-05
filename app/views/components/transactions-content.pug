@@ -30,8 +30,10 @@ div(id="content", class="pmd-content content-area dashboard", style="padding-bot
 													th Qty
 													th Dibuat
 													th Keterangan
-														input(type="hidden", id="")
+														input(type="hidden", id="trxfilter-all-page", value="1")
 											tbody(id="transactions-all-content")
+										div(class="row tfooter")
+											div(class="col-md-12", id="transactions-all-footer")
 									
 						div(role="tabpanel", class="tab-pane", id="keluar") 
 							div(class="component-box")
@@ -49,8 +51,10 @@ div(id="content", class="pmd-content content-area dashboard", style="padding-bot
 													th Qty
 													th Dibuat
 													th Keterangan
+														input(type="hidden", id="trxfilter-out-page", value="1")
 											tbody(id="transactions-out-content")
-												tr
+										div(class="row tfooter")
+											div(class="col-md-12", id="transactions-out-footer")
 							
 						div(role="tabpanel", class="tab-pane", id="masuk")
 							div(class="component-box")
@@ -68,7 +72,10 @@ div(id="content", class="pmd-content content-area dashboard", style="padding-bot
 													th Qty
 													th Dibuat
 													th Keterangan
+														input(type="hidden", id="trxfilter-in-page", value="1")
 											tbody(id="transactions-in-content")
+										div(class="row tfooter")
+											div(class="col-md-12", id="transactions-in-footer")
 
 button(data-target="#modal-form-transaction", data-toggle="modal", class="btn pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary", style="position: fixed; bottom: 20px; right: 20px;")
 	i(class="material-icons pmd-sm") add

@@ -1,5 +1,5 @@
 mixin trxfilters(prefix)
-    .row
+    .row(style="margin-bottom: 10px;")
         .col-md-3 
             div(class="form-group pmd-textfield pmd-textfield", style="margin-left: 10px;width:95%;")
                 label(for="regular1", class="control-label") Tanggal
@@ -15,7 +15,7 @@ mixin trxfilters(prefix)
                 i(class="material-icons pmd-xs") search
 
 mixin prdfilter
-    .row
+    .row(style="margin-bottom: 10px;")
         .col-md-3 
             div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
                 label(for="regular1", class="control-label") Kode Produk
@@ -26,24 +26,24 @@ mixin prdfilter
                 label(for="regular1", class="control-label") Nama Produk
                 input(type="text", id="filter-prd-name", class="form-control")
                 span(class="pmd-textfield-focused")
-        .col-md-3 
-            div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
-                label(for="regular1", class="control-label") User ID
-                input(type="text", id="filter-prd-userid", class="form-control")
-                span(class="pmd-textfield-focused")
-        .col-md-2 
+        //- .col-md-3 
+        //-     div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
+        //-         label(for="regular1", class="control-label") User ID
+        //-         input(type="text", id="filter-prd-userid", class="form-control")
+        //-         span(class="pmd-textfield-focused")
+        .col-md-2
             div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
                 label(for="regular1", class="control-label") Status
                 select(id="filter-prd-status", class="form-control")
                     option(value="1") Aktif
                     option(value="0") Non Aktif
                 span(class="pmd-textfield-focused")
-        .col-md-1
+        .col-md-1(style="padding-top: 10px;")
             button(class="btn pmd-ripple-effect btn-primary", onclick="fn.getProducts()", style="min-width: 50px;float: right; margin-top:10px; margin-right: 10px;")
                 i(class="material-icons pmd-xs") search
 
 mixin usrfilter
-    .row
+    .row(style="margin-bottom: 10px;")
         .col-md-3
             div(class="form-group pmd-textfield pmd-textfield-floating-label", style="margin-left: 10px;width:95%;")
                 label(for="regular1", class="control-label") Email

@@ -29,6 +29,15 @@ utils.dismissAlert = function (templateId) {
     fn.jquery(`.alert-${templateId}`).remove();
 }
 
+utils.removeElement = function (selector) {
+    try {
+        selector = fn.jquery(selector);
+        selector.remove();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 utils.sendXHR = function (opt) {
     return new Promise(function (resolve, reject) {
         if (!opt.headers) opt.headers = {}
@@ -63,7 +72,8 @@ utils.getInputValue = function (selectors) { // selectors => object
             return this.jquery(this.selectors[selectors] || selectors).val();
         }
     } catch (err) {
-        alert(err.message);
+        console.log(selectors);
+        utils.alertError(err.message);
     }
 }
 

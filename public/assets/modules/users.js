@@ -1,11 +1,14 @@
 let fn = window.fn;
-const limitPerPage = 10;
+const limitPerPage = 100;
 
 fn.selectors = {
     contentUser: '#users-content',
     btnAdd: '#modal-trigger-add',
     // filters
     filterPage: '#user-filter-page',
+    filterEmail: '#filter-usr-email',
+    filterUsername: '#filter-usr-name',
+    filterStatus: '#filter-usr-status',
     // modal create new
     modalUser: '#modal-form-user',
     contentModalAdd: '#user-content-add',
@@ -33,6 +36,20 @@ fn.loadingUser = function () {
     fn.jquery('contentUser').html('<tr><td colspan="6">Memuat...</td></tr>');
 }
 
+fn.getFilters = function () {
+    try {
+        const data = fn.getInputValue({
+            email: 'filterEmail',
+            username: 'filterUsername',
+            status: 'filterStatus',
+            page: 'filterPage',
+        });
+        return {...data, limit: limitPerPage};
+    } catch (err) {
+        throw err;
+    }
+}
+
 fn.getUsers = function () {
     try {
         fn.sendXHR({
@@ -41,7 +58,7 @@ fn.getUsers = function () {
             beforeSend: function () {
                 fn.loadingUser();
             },
-            data: {}
+            data: fn.getFilters()
         })
             .then(function (data) {
                 fn.updateRowUserData(data);
@@ -152,7 +169,7 @@ fn.createNewUser = function () {
                 fn.alertError(err.error);
             });
     } catch (err) {
-        alert(err.message);
+        fn.alertError(err.message);
     }
 }
 

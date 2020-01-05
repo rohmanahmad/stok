@@ -36,8 +36,8 @@ service.getUsers = async ({ username, email, status, page, limit }, myusername) 
         criteria['username'] = {
             '$ne': myusername
         }
-        if (username) criteria['username']['$eq'] = new RegExp(username)
-        if (email) criteria['email'] = email
+        if (username) criteria['username'] = new RegExp(username, 'img')
+        if (email) criteria['email'] = new RegExp(email, 'img')
         if (status) criteria['status'] = parseInt(status)
         limit = (limit && parseInt(limit) > 0) ? parseInt(limit) : 10
         page = (page && parseInt(page)) ? parseInt(page) : 1

@@ -13,7 +13,7 @@ let controller = {}
 controller.getProduct = async (req, res, next) => {
     try {
         const access = getAccess(req.roleAccess, 'products')
-        const items = await productService.list({criteria: req.query})
+        const items = await productService.list(req.query)
         res.send({access, items})
     } catch (err) {
         errorMessage({req, res, err})
@@ -22,7 +22,6 @@ controller.getProduct = async (req, res, next) => {
 controller.create = async (req, res, next) => {
     try {
         const { userId } = req.config.user
-        console.log(userId)
         let data = { ...req.body, userId }
         await productService.create(data)
         res.send('ok')

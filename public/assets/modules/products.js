@@ -3,9 +3,14 @@ const limitPerPage = 10;
 
 fn.selectors = {
     contentProduct: '#products-content',
+    footerProduct: '#products-footer',
     btnAdd: '#modal-trigger-add',
     // filters
     filterPage: '#product-filter-page',
+    filterPrdCode: '#filter-prd-code',
+    filterPrdName: '#filter-prd-name',
+    filterUserId: '#filter-prd-userid',
+    filterStatus: '#filter-prd-status',
     modalProduct: '#modal-form-product',
     // modal create new
     contentModalProductAdd: '#product-content-add',
@@ -28,32 +33,60 @@ fn.init = function () {
 }
 
 fn.loadingProduct = function () {
-    fn.jquery('contentProduct').html('<tr><td colspan="6">Memuat...</td></tr>');
+    fn.jquery('contentProduct').append('<tr id="loading"><td colspan="6">Memuat...</td></tr>');
 }
 
-fn.getProducts = function () {
+fn.getFilters = function () {
     try {
+        const data = fn.getInputValue({
+            prdCode: 'filterPrdCode',
+            prdName: 'filterPrdName',
+            userid: 'filterUserId',
+            status: 'filterStatus'
+        });
+        const page = parseInt(fn.jquery('filterPage').val());
+        return {...data, page, limit: limitPerPage};
+    } catch (err) {
+        throw err;
+    }
+}
+
+fn.getProducts = function (isLoadMore = false) {
+    try {
+        if (!isLoadMore) fn.jquery('filterPage').val(1);
+        const data = fn.getFilters();
         fn.sendXHR({
             url: '/api/products',
             method: 'GET',
             beforeSend: function () {
                 fn.loadingProduct();
             },
-            data: {}
+            data
         })
             .then(function (data) {
-                fn.updateRowProductData(data);
+                fn.removeElement('#loading');
+                fn.updateRowProductData(data, isLoadMore);
             })
             .catch(function (err) {
                 fn.alertError(err.error);
                 throw err;
             });
     } catch (err) {
-        fn.alert(err.message);
+        fn.alertError(err.message);
     }
 }
 
-fn.updateRowProductData = function (data) {
+fn.showMore = function () {
+    try {
+        const d = fn.getFilters();
+        fn.jquery('filterPage').val(d.page + 1);
+        fn.getProducts(true); //loadmore = true
+    } catch (err) {
+        throw err;
+    }
+}
+
+fn.updateRowProductData = function (data, isLoadMore = false) {
     try {
         const page = parseInt(fn.getInputValue('filterPage')) || 1;
         let startPage = limitPerPage * (page - 1);
@@ -89,7 +122,7 @@ fn.updateRowProductData = function (data) {
                     <td data-title="Kode Produk">${r.productCode}</td>
                     <td data-title="Nama Produk">${r.productName}</td>
                     <td data-title="Stok">${r.stock}</td>
-                    <td data-title="Dibuat">${moment(r.createdAt).format('LLL')}</td>
+                    <td data-title="Dibuat">${moment(r.createdAt).format('DD/MM/YYYY')}</td>
                     <td data-title="Keterangan">${r.description || '-'}</td>
                     <td data-title="Action">
                         <a href="javascript:void(0);"
@@ -105,12 +138,28 @@ fn.updateRowProductData = function (data) {
                 </tr>`;
                 return row;
             });
-        if (rows.length === 0) rows = [`<tr><td colspan="6" style="text-align: left;">Data Tidak Ditemukan</td></tr>`];
-        fn.jquery('contentProduct').html(rows.join(' '));
+        if (rows.length === 0 && !isLoadMore) rows = [`<tr><td colspan="6" style="text-align: left;">Data Tidak Ditemukan</td></tr>`];
+        if (rows.length === limitPerPage) {
+            fn.jquery('footerProduct').html(fn.isButtonMore(true));
+        } else {
+            fn.jquery('footerProduct').html(fn.isButtonMore(false));
+        }
+        if (isLoadMore) {
+            fn.jquery('contentProduct').append(rows.join(' '));
+        } else {
+            fn.jquery('contentProduct').html(rows.join(' '));
+        }
         fn.activatePopover();
     } catch (err) {
         throw err;
     }
+}
+
+fn.isButtonMore = function (status = true) {
+    if (status) {
+        return `<button onclick="fn.showMore();" class="btn btn-primary btn-xs pmd-btn-raised pmd-ripple-effect">Tampilkan Lebih Banyak...</button>`;
+    }
+    return '';
 }
 
 fn.activatePopover = function () {
@@ -155,7 +204,7 @@ fn.createNewProduct = function () {
                 fn.alertError(err.error);
             });
     } catch (err) {
-        alert(err.message);
+        fn.alertError(err.message);
     }
 }
 
@@ -175,7 +224,7 @@ fn.edit = function (obj) {
         fn.setValueFromModalProduct(currentRow);
         fn.jquery('btnSave').attr('data-id', dataId);
     } catch (err) {
-        fn.alert(err.message);
+        fn.alertError(err.message);
     }
 }
 
@@ -205,7 +254,7 @@ fn.updateProduct = function (obj) {
                 throw err;
             });
     } catch (err) {
-        fn.alert(err.message);
+        fn.alertError(err.message);
     }
 }
 
@@ -225,7 +274,7 @@ fn.deleteConfirmation = function (obj) {
                 throw err;
             });
     } catch (err) {
-        fn.alert(err.message);
+        fn.alertError(err.message);
     }
 }
 

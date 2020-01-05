@@ -10,6 +10,7 @@ service.create = async ({ userId, prdId, prdName, prdQty, prdDescription }) => {
         data = Validation.isString({productCode: prdId, productName: prdName, description: prdDescription})
         data = {...data, ...Validation.isNumber({ stock: parseInt(prdQty) })}
         data['status'] = 1
+        data['userId'] = userId
         if (await ProductModel.findOne({ productCode: prdId })) throw new Error(`Product "${prdId}" already exists.`)
         data = await ProductModel.updateOne({ productCode: prdId }, {
             $setOnInsert: {
@@ -25,9 +26,17 @@ service.create = async ({ userId, prdId, prdName, prdQty, prdDescription }) => {
         throw err
     }
 }
-service.list = async ({ criteria }) => {
+service.list = async ({ prdCode, prdName, userid, status, limit, page }) => {
     try {
-        const data = await ProductModel.find({}).sort({$natural: -1})
+        let criteria = {}
+        limit = parseInt(limit) > 0 ? parseInt(limit) : 10
+        page = parseInt(page) > 0 ? parseInt(page) : 1
+        const skip = limit * (page -1)
+        if (prdCode) criteria['productCode'] = new RegExp(prdCode, 'img')
+        if (prdName) criteria['productName'] = new RegExp(prdName, 'img')
+        if (userid) criteria['userId'] = userid
+        if (status) criteria['status'] = parseInt(status)
+        const data = await ProductModel.find(criteria).sort({$natural: -1}).skip(skip).limit(limit)
         return data
     } catch (err) {
         throw err
