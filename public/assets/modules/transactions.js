@@ -22,6 +22,7 @@ fn.selectors = {
 
 fn.init = function () {
     fn.currentData = {};
+    fn.currentTab = 'all';
     fn.getTransactions();
     fn.jquery('formTrxDate').val(new Date().toDateInputValue());
     fn.updateListProducts();
@@ -34,9 +35,9 @@ fn.loadingTrx = function () {
 fn.getFilters = function (type = 'all') {
     const data = fn.getInputValue({
         date: `#trxfilter-${type}-date`,
-        prdcode: `#trxfilter-${type}-prdcode`
+        prdcode: `#trxfilter-${type}-prdcode`,
     });
-    return data;
+    return {...data, type};
 }
 
 fn.getTransactions = function () {
@@ -73,14 +74,16 @@ fn.updateRowTrxData = function (type = 'all', data) {
         for (const r in items) {
             const d = items[r];
             const classBg = (d.type === 'in') ? 'border-green' : 'border-red';
+            const prdName = d.product && d.product[0] && d.product[0].productName ? d.product[0].productName : '';
             nStart += 1;
             let tr = '<tr>';
             tr += `<td data-title="#" class="${classBg}">${ nStart }</td>`;
             tr += `<td data-title="Tanggal">${ moment(d.date).format('LL') }</td>`;
             tr += `<td data-title="Tipe Transaksi">${ d.type || '-' }</td>`;
-            tr += `<td data-title="Nama Produk">${ d.prdName || '-' }</td>`;
-            tr += `<td data-title="Nama Produk">${ d.qty || 0 }</td>`;
-            tr += `<td data-title="Nominal">${ d.nominal || 0 }</td>`;
+            tr += `<td data-title="Kode Produk">${ d.prdCode || '-' }</td>`;
+            tr += `<td data-title="Nama Produk">${ prdName || '-' }</td>`;
+            tr += `<td data-title="Qty Produk">${ d.qty || 0 }</td>`;
+            tr += `<td data-title="Dibuat">${ moment(d.createdAt).format('LLL') }</td>`;
             tr += `<td data-title="Keterangan">${ d.description || '-' }</td>`;
             tr += '</tr>';
             body.append(tr);
@@ -147,5 +150,6 @@ fn.updateListProducts = function () {
         fn.alertError(err.error);
     }
 }
+
 // init first load
 fn.init();

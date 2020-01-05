@@ -30,16 +30,31 @@ service.create = async ({ userId, type, date, prdCode, qty, description }) => {
         throw err
     }
 }
-service.list = async ({ prdCode, date, type }) => {
+service.list = async ({ prdcode, date, type }) => {
     try {
         let criteria = {}
         if (type === 'in') criteria['type'] = 'in'
         if (type === 'out') criteria['type'] = 'out'
-        if (prdCode && prdCode.length > 0) criteria['prdCode'] = prdCode.trim()
+        if (prdcode && prdcode.length > 0) criteria['prdCode'] = new RegExp(prdcode.trim(), 'i')
         if (date && date.length === 10) {
             criteria['date'] = new Date(date)
         }
-        const data = await TransactionModel.find(criteria).sort({ $date: -1 })
+        const data = await TransactionModel.aggregate([
+            {
+                $match: criteria
+            },
+            {
+                $sort: { date: -1, createdAt: -1 }
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'prdCode',
+                    foreignField: 'productCode',
+                    as: 'product'
+                }
+            }
+        ])
         return data
     } catch (err) {
         throw err

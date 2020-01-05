@@ -13,8 +13,8 @@ const schema = new mongoose
         nominal: Number,
         description: String,
         status: Number,
-        createAt: Date,
-        updateAt: Date
+        createdAt: Date,
+        updatedAt: Date
     })
 
 const model = mongoose.model('transactions', schema, 'transactions')
