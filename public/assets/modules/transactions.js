@@ -1,5 +1,5 @@
 let fn = window.fn;
-const limitPerPage = 2;
+const limitPerPage = 20;
 
 fn.selectors = {
     contentTrxAll: '#transactions-all-content',
