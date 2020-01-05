@@ -10,6 +10,7 @@ service.create = async ({ userId, type, date, prdCode, qty, description }) => {
         let data = Validation.required({ userId, type, date, prdCode, qty })
         data = Validation.isString({ userId, type, date, prdCode, qty })
         data = {...data, ...Validation.isNumber({ qty: parseInt(qty) })}
+        if (data.qty < 1) throw new Error('Qty Harus Lebih Dari 0')
         data['status'] = 1
         data['description'] = description
         data['_id'] = null

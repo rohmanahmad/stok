@@ -77,8 +77,8 @@ fn.updateRowUserData = function (data) {
         let rows = data.items
             .filter(x => x.username !== currentUser)
             .map((r) => {
-                const editAction = access.edit ? `<a ${modalAttr} data-target='#modal-form-user' class='btn btn-xs btn-warning pmd-btn-fab btn-action' onclick='fn.edit(this)'>${icons['edit']}</a>` : '';
-                const removeAction = access.delete ? `<a ${modalAttr} class='btn btn-xs btn-danger pmd-btn-fab btn-action' data-id='${r.dataId}' data-action='fn.deleteConfirmation(this)' onclick='fn.confirm(this)'>${icons['delete']}</a>` : '';
+                const editAction = r.roleType !== 'admin' && access.edit ? `<a ${modalAttr} data-target='#modal-form-user' class='btn btn-xs btn-warning pmd-btn-fab btn-action' onclick='fn.edit(this)'>${icons['edit']}</a>` : '';
+                const removeAction = r.roleType !== 'admin' && access.delete ? `<a ${modalAttr} class='btn btn-xs btn-danger pmd-btn-fab btn-action' data-id='${r.dataId}' data-action='fn.deleteConfirmation(this)' onclick='fn.confirm(this)'>${icons['delete']}</a>` : '';
                 let accessList = `
                 <div data-id='${r.dataId}' style='padding: 10px;'>
                     ${editAction}

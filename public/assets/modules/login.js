@@ -29,7 +29,7 @@ fn.doLogin = function () {
             window.location.href = '/users';
         })
         .catch(function (err) {
-            alert(err.message);
+            alert(err.error);
         });
 }
 
