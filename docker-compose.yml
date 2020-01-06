@@ -6,18 +6,18 @@ networks:
 
 services: 
     app:
-        image: node:alpine
+        image: rohmanahmad/stok:1.0.0
         environment: 
-            - REDIS_URI="redis://redisdb:6379/2"
-            - MONGO_URI="mongodb://mongod:27017/stok"
+            - REDIS_URI=redis://db2:6379/2
+            - MONGO_URI=mongodb://db1:27017/stok
         ports:
             - 3001:3000
-        working_dir: "/app"
+        working_dir: /app
         volumes: 
-            - "./src:/app"
+            - ./src:/app
         networks:
             - officenet
-        command: "node server.js"
+        command: node server.js
         external_links:
-            - v403_mongodb_1:mongod
-            - redis_redis_1:redisdb
+            - v403_mongodb_1:db1
+            - redis_redis_1:db2
