@@ -1,6 +1,6 @@
 'use strict'
 
-const userService = require('../services/userService')
+const userService = require('../services/UserService')
 const errorHandler = require('../libs/errorHandler')
 const { getAccess } = require('../helpers/access')
 

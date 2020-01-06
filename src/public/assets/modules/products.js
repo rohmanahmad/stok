@@ -27,25 +27,22 @@ fn.selectors = {
     btnSave: '#btn-product-save'
 }
 
-fn.init = function () {
-    fn.currentData = {};
-    fn.getProducts();
-}
-
 fn.loadingProduct = function () {
     fn.jquery('contentProduct').append('<tr id="loading"><td colspan="6">Memuat...</td></tr>');
 }
 
 fn.getFilters = function () {
     try {
-        const data = fn.getInputValue({
+        let data = fn.getInputValue({
             prdCode: 'filterPrdCode',
             prdName: 'filterPrdName',
             userid: 'filterUserId',
             status: 'filterStatus'
         });
         const page = parseInt(fn.jquery('filterPage').val());
-        return {...data, page, limit: limitPerPage};
+        data['page'] = page;
+        data['limit'] = limitPerPage;
+        return data;
     } catch (err) {
         throw err;
     }
@@ -276,6 +273,11 @@ fn.deleteConfirmation = function (obj) {
     } catch (err) {
         fn.alertError(err.message);
     }
+}
+
+fn.init = function () {
+    fn.currentData = {};
+    fn.getProducts();
 }
 
 // run firstly

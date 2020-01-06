@@ -13,8 +13,8 @@ services:
         ports:
             - 3001:3000
         working_dir: /app
-        volumes: 
-            - ./src:/app
+        # volumes: 
+        #     - ./src:/app
         networks:
             - officenet
         command: node server.js

@@ -1,6 +1,6 @@
 'use strict'
 
-const transactionService = require('../services/transactionService')
+const transactionService = require('../services/TransactionService')
 const errorHandler = require('../libs/errorHandler')
 const { getAccess } = require('../helpers/access')
 

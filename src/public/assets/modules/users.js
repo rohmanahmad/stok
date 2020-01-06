@@ -27,24 +27,20 @@ fn.selectors = {
     btnSave: '#btn-user-save'
 }
 
-fn.init = function () {
-    fn.currentData = {};
-    fn.getUsers();
-}
-
 fn.loadingUser = function () {
     fn.jquery('contentUser').html('<tr><td colspan="6">Memuat...</td></tr>');
 }
 
 fn.getFilters = function () {
     try {
-        const data = fn.getInputValue({
+        let data = fn.getInputValue({
             email: 'filterEmail',
             username: 'filterUsername',
             status: 'filterStatus',
             page: 'filterPage',
         });
-        return {...data, limit: limitPerPage};
+        data['limit'] = limitPerPage;
+        return data;
     } catch (err) {
         throw err;
     }
@@ -240,6 +236,11 @@ fn.deleteConfirmation = function (obj) {
     } catch (err) {
         fn.alertError(err.message);
     }
+}
+
+fn.init = function () {
+    fn.currentData = {};
+    fn.getUsers();
 }
 
 // init first time

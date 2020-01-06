@@ -20,25 +20,20 @@ fn.selectors = {
     btnSave: '#btn-trx-save'
 }
 
-fn.init = function () {
-    fn.currentData = {};
-    fn.currentTab = 'all';
-    fn.getTransactions();
-    fn.jquery('formTrxDate').val(new Date().toDateInputValue());
-    fn.updateListProducts();
-}
-
 fn.loadingTrx = function () {
     fn.jquery(`#transaction-${fn.currentTab}-content`).append('<tr id="loading"><td colspan="6">Memuat...</td></tr>');
 }
 
 fn.getFilters = function (type = 'all') {
-    const data = fn.getInputValue({
+    let data = fn.getInputValue({
         date: `#trxfilter-${type}-date`,
         prdcode: `#trxfilter-${type}-prdcode`,
     });
     const page = parseInt(fn.jquery(`#trxfilter-${type}-page`).val());
-    return {...data, page, limit: limitPerPage, type};
+    data['page'] = page;
+    data['type'] = type;
+    data['limit'] = limitPerPage;
+    return data;
 }
 
 fn.getTransactions = function (isLoadMore = false) {
@@ -172,6 +167,14 @@ fn.updateListProducts = function () {
     } catch (err) {
         fn.alertError(err.error);
     }
+}
+
+fn.init = function () {
+    fn.currentData = {};
+    fn.currentTab = 'all';
+    fn.getTransactions();
+    fn.jquery('formTrxDate').val(new Date().toDateInputValue());
+    fn.updateListProducts();
 }
 
 // init first load
