@@ -122,4 +122,4 @@ utils.hideModal = function (selector = '') {
 }
 
 const currentUser = ls.getItem('username');
-$('#current-user').html(currentUser);
+$('#current-user').htmls(currentUser);
