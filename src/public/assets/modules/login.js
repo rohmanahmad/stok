@@ -5,15 +5,9 @@ fn.selectors = {
     password: '#input-password'
 }
 
-fn.listenEnter = function () {
-    fn.jquery('input').on('keypress', function (e) {
-        if(e.which == 13) fn.doLogin();
-    });
-}
-
 fn.init = function () {
     ls.clear();
-    fn.listenEnter();
+    fn.listenEnter(fn.doLogin);
     fn.jquery('#top-icon-menus').remove();
 }
 

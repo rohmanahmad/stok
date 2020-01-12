@@ -71,16 +71,16 @@ mixin modalProduct
 		div(class="modal-dialog") 
 			div(class="modal-content", id="product-content-add") 
 				div(class="modal-header") 
-					h2(class="pmd-card-title-text", style="min-width: 300px;") Tambah Produk
+					h2(class="pmd-card-title-text", style="min-width: 300px;") Tambah Suvenir
 				
 				div(class="modal-body") 
 					form(class="form-horizontal")
 						div(class="form-group pmd-textfield pmd-textfield-floating-label")
-							label(for="first-name") Kode Produk
+							label(for="first-name") Kode Suvenir
 							input(type="text", class="mat-input form-control", id="prd-id")
 							//- span(class="help-text") required! 
 						div(class="form-group pmd-textfield pmd-textfield-floating-label")
-							label(for="first-name") Nama Produk
+							label(for="first-name") Nama Suvenir
 							input(type="text", class="mat-input form-control", id="prd-name", value="")
 						
 						div(class="form-group pmd-textfield pmd-textfield-floating-label")
@@ -96,16 +96,16 @@ mixin modalProduct
 					button(class="btn pmd-ripple-effect btn-primary", type="button", onclick="fn.createNewProduct()") Simpan
 			div(class="modal-content", id="product-content-edit") 
 				div(class="modal-header") 
-					h2(class="pmd-card-title-text", style="min-width: 300px;") Edit Produk
+					h2(class="pmd-card-title-text", style="min-width: 300px;") Edit Suvenir
 				
 				div(class="modal-body") 
 					form(class="form-horizontal")
 						div(class="form-group pmd-textfield")
-							label(for="first-name") Kode Produk
+							label(for="first-name") Kode Suvenir
 							input(type="text", class="mat-input form-control", id="edit-prd-id", readonly="true")
 							//- span(class="help-text") required! 
 						div(class="form-group pmd-textfield")
-							label(for="first-name") Nama Produk
+							label(for="first-name") Nama Suvenir
 							input(type="text", class="mat-input form-control", id="edit-prd-name")
 						
 						div(class="form-group pmd-textfield")
@@ -142,7 +142,7 @@ mixin modalTrx
 							//- span(class="help-text") required! 
 
 						div(class="form-group pmd-textfield pmd-textfield-floating-label")
-							label(for="first-name") Produk
+							label(for="first-name") Suvenir
 							select(class="mat-input form-control pmd-select2", id="trx-product")
 								option(value="Prd 1") Product 1
 								option(value="Prd 2") Product 2

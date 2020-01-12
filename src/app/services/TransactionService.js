@@ -1,5 +1,6 @@
 'use strict'
 
+const {result} = require('lodash')
 const TransactionModel = require('../models/Transactions')
 const ProductService = require('./ProductService')
 const Validation = require('../libs/inputValidator')
@@ -16,10 +17,10 @@ service.create = async ({ userId, type, date, prdCode, qty, description }) => {
         data['description'] = description
         data['_id'] = null
         const prd = await ProductService.getOne({ productCode: prdCode })
-        if (!prd) throw new Error('Produk Tidak Ditemukan Atau Stok Tidak Mencukupi')
+        if (!prd) throw new Error('Suvenir Tidak Ditemukan Atau Stok Tidak Mencukupi')
         const stok = prd.stock || 0
         let newStock = type === 'out' ? stok - data.qty : stok + data.qty
-        if (type === 'out' && newStock < 0) throw new Error('Stok Produk Tidak Mencukupi')
+        if (type === 'out' && newStock < 0) throw new Error('Stok Suvenir Tidak Mencukupi')
         data = await TransactionModel.create({
             ...data,
             createdAt: new Date()
@@ -62,9 +63,21 @@ service.list = async ({ prdcode, date, type, limit, page }) => {
                     foreignField: 'productCode',
                     as: 'product'
                 }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: 'userId',
+                    as: 'user'
+                }
             }
         ])
-        return data
+        return data.map(function (x) {
+            x.product = result(x, 'product[0].productName', '-')
+            x.user = result(x, 'user[0].username', '-')
+            return x
+        })
     } catch (err) {
         throw err
     }

@@ -10,6 +10,12 @@ const ls = localStorage;
 let utils = window.fn;
 utils.currentToken = ls.getItem('token');
 
+utils.listenEnter = function (handler) {
+    fn.jquery('input').on('keypress', function (e) {
+        if(e.which == 13) handler();
+    });
+}
+
 utils.alertError = function (message = '', options = {}) {
     const templateId = new Date().getTime();
     const template = `
@@ -122,4 +128,4 @@ utils.hideModal = function (selector = '') {
 }
 
 const currentUser = ls.getItem('username');
-$('#current-user').htmls(currentUser);
+$('#current-user').html(currentUser);

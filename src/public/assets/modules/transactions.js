@@ -70,16 +70,17 @@ fn.updateRowTrxData = function (type = 'all', data = {}, isLoadMore = false) {
         for (const r in items) {
             const d = items[r];
             const classBg = (d.type === 'in') ? 'border-green' : 'border-red';
-            const prdName = d.product && d.product[0] && d.product[0].productName ? d.product[0].productName : '';
+            const prdName = d.product;
             nStart += 1;
             let tr = '<tr>';
             tr += `<td data-title="#" class="${classBg}">${ nStart }</td>`;
             tr += `<td data-title="Tanggal">${ moment(d.date).format('DD MMM YYYY') }</td>`;
             tr += `<td data-title="Tipe Transaksi">${ d.type || '-' }</td>`;
-            tr += `<td data-title="Kode Produk">${ d.prdCode || '-' }</td>`;
-            tr += `<td data-title="Nama Produk">${ prdName || '-' }</td>`;
-            tr += `<td data-title="Qty Produk">${ d.qty || 0 }</td>`;
+            tr += `<td data-title="Kode Suvenir">${ d.prdCode || '-' }</td>`;
+            tr += `<td data-title="Nama Suvenir">${ prdName || '-' }</td>`;
+            tr += `<td data-title="Qty Suvenir">${ d.qty || 0 }</td>`;
             tr += `<td data-title="Dibuat">${ moment(d.createdAt).format('DD/MM/YYYY H:m') }</td>`;
+            tr += `<td data-title="User">${ d.user || '-' }</td>`;
             tr += `<td data-title="Keterangan">${ d.description || '-' }</td>`;
             tr += '</tr>';
             body.append(tr);

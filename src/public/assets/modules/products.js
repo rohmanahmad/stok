@@ -116,10 +116,11 @@ fn.updateRowProductData = function (data, isLoadMore = false) {
                 const currentClass = r.status ? 'border-green' : 'border-red';
                 const row = `<tr>
                     <td data-title="#" class="${currentClass}">${startPage}</td>
-                    <td data-title="Kode Produk">${r.productCode}</td>
-                    <td data-title="Nama Produk">${r.productName}</td>
+                    <td data-title="Kode Suvenir">${r.productCode}</td>
+                    <td data-title="Nama Suvenir">${r.productName}</td>
                     <td data-title="Stok">${r.stock}</td>
                     <td data-title="Dibuat">${moment(r.createdAt).format('DD/MM/YYYY')}</td>
+                    <td data-title="User">${r.user}</td>
                     <td data-title="Keterangan">${r.description || '-'}</td>
                     <td data-title="Action">
                         <a href="javascript:void(0);"

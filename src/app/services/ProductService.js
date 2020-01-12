@@ -1,5 +1,6 @@
 'use strict'
 
+const {result} = require('lodash')
 const ProductModel = require('../models/Products')
 const Validation = require('../libs/inputValidator')
 let service = {}
@@ -36,8 +37,35 @@ service.list = async ({ prdCode, prdName, userid, status, limit, page }) => {
         if (prdName) criteria['productName'] = new RegExp(prdName, 'img')
         if (userid) criteria['userId'] = userid
         if (status) criteria['status'] = parseInt(status)
-        const data = await ProductModel.find(criteria).sort({$natural: -1}).skip(skip).limit(limit)
-        return data
+        const aggregate = [
+            {
+                $match: criteria
+            },
+            {
+                $sort: {
+                    _id: -1
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: 'userId',
+                    as: 'user'
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: limit
+            }
+        ]
+        const data = await ProductModel.aggregate(aggregate)
+        return data.map(function (x) {
+            x.user = result(x, 'user[0].username', '-')
+            return x
+        })
     } catch (err) {
         throw err
     }
